@@ -1,0 +1,12 @@
+.github
+.vscode
+^LICENSE\.md$
+^doc$
+^Meta$
+^\.Rcheck$
+^\.\.Rcheck$
+^vignettes/.*\.html$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

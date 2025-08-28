@@ -89,3 +89,7 @@ rsconnect/
 .positron/
 *.code-workspace
 .vscode/settings.json
+inst/doc
+/doc/
+/Meta/
+docs
