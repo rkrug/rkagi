@@ -1,0 +1,27 @@
+http_interactions:
+- request:
+    method: GET
+    uri: https://kagi.com/api/v0/search?q=openalex+api&limit=1
+  response:
+    status: 200
+    headers:
+      x-request-id: 066f79699322ab1b7e8eb40b8f3fc41e
+      x-kagi-trace: 066f79699322ab1b7e8eb40b8f3fc41e
+      cache-control: no-store
+      content-type: application/json
+      content-encoding: gzip
+      content-length: '356'
+      via: 1.1 google
+      date: Wed, 08 Oct 2025 12:32:36 GMT
+      x-frame-options: SAMEORIGIN
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+    body:
+      string: '{"meta":{"id":"066f79699322ab1b7e8eb40b8f3fc41e","node":"europe-west4","ms":1073,"api_balance":107.963917},"data":[{"t":0,"url":"https://docs.openalex.org/how-to-use-the-api/api-overview","title":"API
+        Overview","snippet":"The API is the primary way to get OpenAlex data. It&#39;s
+        free and requires no authentication. The daily limit for API calls is 100,000
+        requests ..."},{"t":1,"list":["openalex api","openalex api key","openalex
+        api python","openalex api docs","openalex api search","openalex api rate limit","openalex
+        api abstract","openalex api doc"]}]}'
+  recorded_at: 2025-10-08 12:32:37
+recorded_with: VCR-vcr/2.0.0
