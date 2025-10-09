@@ -12,8 +12,8 @@ invisible(vcr::vcr_configure(
   filter_query_parameters = list(api_key = "<api-key>")
 ))
 
-if (is.null(resolve_api_key(keyring::key_get("API_kagi")))) {
-  Sys.setenv(KAGI_API_KEY = "<api-key>")
-} else {
-  Sys.setenv(KAGI_API_KEY = resolve_api_key(keyring::key_get("API_kagi")))
-}
+# if (is.null(resolve_api_key(keyring::key_get("API_kagi")))) {
+#   Sys.setenv(KAGI_API_KEY = "<api-key>")
+# } else {
+#   Sys.setenv(KAGI_API_KEY = resolve_api_key(keyring::key_get("API_kagi")))
+# }

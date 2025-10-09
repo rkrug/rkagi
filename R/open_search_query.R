@@ -4,7 +4,7 @@
 #' @param session_token Optional Kagi session token for private search
 #'   (see your Kagi account's "Session Link").
 #' @export
-open_kagi_query <- function(
+open_search_query <- function(
   query,
   session_token = NULL
 ) {

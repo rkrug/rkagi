@@ -1,6 +1,6 @@
 Package: rkagi
 Title: Kagi API Client for R
-Version: 0.1.0
+Version: 0.2.0
 Description: A hybrid S3-based client for Kagi APIs (Search, Summarizer, FastGPT, Enrich)
     with httr2-style requests and endpoint-specific parsers.
 Authors@R: c(
@@ -16,7 +16,10 @@ Depends:
 Imports:
     httr2,
     jsonlite,
-    tibble
+    tibble,
+    future,
+    future.apply,
+    utils
 Suggests:
     here,
     keyring,
@@ -26,6 +29,6 @@ Suggests:
     testthat (>= 3.0.0),
     vcr
 VignetteBuilder: knitr, quarto
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 URL: https://rkrug.github.io/rkagi/
