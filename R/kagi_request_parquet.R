@@ -175,7 +175,12 @@ kagi_request_parquet <- function(
       )
     )$type
 
-    if (types %in% c("search", "enrich") && !grepl("^STRUCT", data_type)) {
+    type <- fn |>
+      basename() |>
+      strsplit(split = "_")
+    type <- type[[1]][1]
+
+    if (type %in% c("search", "enrich") && !grepl("^STRUCT", data_type)) {
       if (verbose) {
         message("   No rows in `data`; skipping.")
       }
@@ -185,7 +190,7 @@ kagi_request_parquet <- function(
     # Extract and convert the data -------------------------------------------
 
     statement <- switch(
-      types,
+      type,
       "search" = sprintf(
         "
           COPY (
@@ -241,7 +246,7 @@ kagi_request_parquet <- function(
         fn,
         output
       ),
-      stop("Unknown type of JSON files: ", types)
+      stop("Unknown type of JSON files: ", type)
     )
 
     try(

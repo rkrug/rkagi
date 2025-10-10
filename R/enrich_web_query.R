@@ -96,7 +96,7 @@ enrich_web_query <- function(
 #' @export
 print.kagi_enrich_web_query <- function(x, ...) {
   cat(
-    "<kagi_query>\n"
+    "<kagi_enrich_web_query>\n"
   )
   for (i in 1:length(x)) {
     paste0(

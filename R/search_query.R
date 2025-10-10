@@ -130,7 +130,7 @@ search_query <- function(
 #' @export
 print.kagi_search_query <- function(x, ...) {
   cat(
-    "<kagi_query>\n"
+    "<kagi_search_query>\n"
   )
   for (i in 1:length(x)) {
     paste0(

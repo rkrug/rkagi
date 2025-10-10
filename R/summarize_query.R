@@ -150,35 +150,19 @@ summarize_query <- function(
   return(result)
 }
 
-# #' @export
-# print.kagi_summarize_query <- function(x, ...) {
-#   cat("<summarize_request>\n")
-#   cat(
-#     "  With:      ",
-#     if (!is.null(x["url"])) "url" else "text",
-#     "\n",
-#     sep = ""
-#   )
-#   if (!is.null(x["url"])) {
-#     cat("  URL:       ", x["url"], "\n", sep = "")
-#   }
-#   if (!is.null(x["text"])) {
-#     cat(
-#       "  Text:      ",
-#       paste0(substr(x["text"], 1, 60), if (nchar(x["text"]) > 60) "..."),
-#       "\n",
-#       sep = ""
-#     )
-#   }
-#   cat("  Engine:    ", x["engine"] %||% "<default>", "\n", sep = "")
-#   cat("  Type:      ", x["summary_type"] %||% "summary", "\n", sep = "")
-#   cat("  Language:  ", x["target_language"] %||% "<auto>", "\n", sep = "")
-#   cat(
-#     "  Cache:     ",
-#     if (is.null(x["cache"])) "<default>" else as.character(x["cache"]),
-#     "\n",
-#     sep = ""
-#   )
-
-#   invisible(x)
-# }
+#' @export
+print.kagi_summarize_query <- function(x, ...) {
+  cat(
+    "<kagi_summarize_query>\n"
+  )
+  for (i in 1:length(x)) {
+    paste0(
+      names(x)[i],
+      ": \"",
+      x[i],
+      "\"\n"
+    ) |>
+      cat()
+  }
+  invisible(x)
+}
