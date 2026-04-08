@@ -11,65 +11,76 @@ execute:
   warning: false
   message: false
 ---
-# rkagi: R Client for Kagi APIs
 
-## Installation
+# rkagi: First End-to-End Workflow
+
+This quickstart is a complete first run with `rkagi`: install the package, create a secure connection, build queries, execute requests, and store responses in a format ready for analysis.
+
+The package is intentionally structured around a stable pattern:
+
+1. Create query objects with endpoint-specific constructors.
+2. Reuse a single `kagi_connection()` object.
+3. Execute with `kagi_request()` and persist JSON responses.
+4. Optionally convert JSON output to parquet tables.
+
+Once this pattern is familiar, every endpoint follows the same operational logic.
+
+## Install and load the package
+
+If `rkagi` is not installed yet, install it from GitHub and load it:
 
 ```r
-if (requireNamespace("remotes", quietly = TRUE) == FALSE) {
+if (requireNamespace("remotes", quietly = FALSE)) {
   install.packages("remotes")
 }
 remotes::install_github("rkrug/rkagi")
+library(rkagi)
 ```
 
-## Getting a Kagi API key
+## Create a secure API connection
 
-Store your API key securely (recommended) with `keyring`:
+Store your API key in your local keyring once:
 
 ```r
 keyring::key_set("API_kagi")
 ```
 
-Then create a reusable `rkagi` connection:
+Then create a reusable connection object:
 
 ```r
-library(rkagi)
-
 conn <- kagi_connection(
   api_key = function() keyring::key_get("API_kagi")
 )
 ```
 
-## Package design
+Using a function for `api_key` keeps credentials out of scripts and supports reproducible batch runs.
 
-`rkagi` follows a simple three-step workflow:
+## Build your first search query
 
-1. Build endpoint-specific query objects:
-   `search_query()`, `enrich_web_query()`, `enrich_news_query()`, `summarize_query()`.
-2. Create one connection with `kagi_connection()`.
-3. Execute with `kagi_request()` to write JSON responses to disk.
-
-This design makes batch runs reproducible and easy to persist.
-
-## Build and inspect a search query
+Search is a good first endpoint because it shows how query constructors work:
 
 ```r
 q <- search_query(
-  query    = 'biodiversity "annual report"',
+  query = 'biodiversity "annual report"',
   filetype = c("pdf", "docx"),
-  site     = c("example.com", "gov"),
-  inurl    = c("2024", "report"),
-  intitle  = "summary",
-  expand   = FALSE
+  site = c("example.com", "gov"),
+  inurl = c("2024", "report"),
+  intitle = "summary",
+  expand = FALSE
 )
-
-q
-
-# Optional: open the query in your browser
-open_search_query(q)
 ```
 
-## Search API
+`search_query()` returns a named list, even for a single input. That consistency makes it easy to scale the same code from one query to many.
+
+If you want to inspect the generated search string interactively:
+
+```r
+open_search_query(q[[1]])
+```
+
+## Execute and persist search results
+
+Create an output folder and run the request:
 
 ```r
 out_search <- tempfile("rkagi-search-")
@@ -86,9 +97,13 @@ kagi_request(
 list.files(out_search, pattern = "\\.json$", full.names = TRUE)
 ```
 
-## Enrich API
+Each request writes a JSON file. This makes reruns and audits straightforward.
 
-Web enrich:
+## Run one example from each endpoint
+
+The remaining endpoints use the same connection and request function. Only the query constructor changes.
+
+### Enrich web
 
 ```r
 q_web <- enrich_web_query("open data portals", site = "gov", expand = FALSE)
@@ -99,13 +114,12 @@ dir.create(out_web, recursive = TRUE, showWarnings = FALSE)
 kagi_request(
   connection = conn,
   query = q_web,
-  limit = 5,
   output = out_web,
   overwrite = TRUE
 )
 ```
 
-News enrich:
+### Enrich news
 
 ```r
 q_news <- enrich_news_query("biodiversity policy", expand = FALSE)
@@ -116,58 +130,60 @@ dir.create(out_news, recursive = TRUE, showWarnings = FALSE)
 kagi_request(
   connection = conn,
   query = q_news,
-  limit = 5,
   output = out_news,
   overwrite = TRUE
 )
 ```
 
-## Universal Summarizer
-
-URL mode:
-
-```r
-q_sum_url <- summarize_query(
-  url = "https://www.example.com/long-article",
-  engine = "muriel",
-  summary_type = "summary",
-  target_language = "EN"
-)
-
-out_sum_url <- tempfile("rkagi-summarize-url-")
-dir.create(out_sum_url, recursive = TRUE, showWarnings = FALSE)
-
-kagi_request(
-  connection = conn,
-  query = q_sum_url,
-  output = out_sum_url,
-  overwrite = TRUE
-)
-```
-
-Text mode:
+### Summarize (text input)
 
 ```r
 q_sum_text <- summarize_query(
-  text = "Paste long text here ...",
+  text = paste(
+    "Biodiversity underpins ecosystem services including pollination,",
+    "soil fertility, water purification, and climate regulation.",
+    "Species decline has implications for resilience and wellbeing."
+  ),
   engine = "cecil",
-  summary_type = "takeaway",
+  summary_type = "summary",
   target_language = "EN",
-  cache = FALSE
+  cache = TRUE
 )
 
-out_sum_text <- tempfile("rkagi-summarize-text-")
-dir.create(out_sum_text, recursive = TRUE, showWarnings = FALSE)
+out_sum <- tempfile("rkagi-summarize-")
+dir.create(out_sum, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
   connection = conn,
   query = q_sum_text,
-  output = out_sum_text,
+  output = out_sum,
   overwrite = TRUE
 )
 ```
 
-## Convert JSON output to parquet
+### FastGPT
+
+```r
+q_fast <- fastgpt_query(
+  query = "What are ecosystem services?",
+  cache = TRUE,
+  web_search = TRUE
+)
+
+out_fast <- tempfile("rkagi-fastgpt-")
+dir.create(out_fast, recursive = TRUE, showWarnings = FALSE)
+
+kagi_request(
+  connection = conn,
+  query = q_fast,
+  output = out_fast,
+  overwrite = TRUE
+)
+```
+
+## Convert JSON results to parquet
+
+When you move from inspection to analysis pipelines, parquet is usually more convenient:
 
 ```r
 parquet_dir <- tempfile("rkagi-parquet-")
@@ -178,6 +194,15 @@ kagi_request_parquet(
   overwrite = TRUE
 )
 ```
+
+## Where to go next
+
+For deeper endpoint-specific workflows (batching patterns, robust error handling, and endpoint-focused examples), continue with:
+
+- `vignette("search-endpoint", package = "rkagi")`
+- `vignette("enrich-endpoint", package = "rkagi")`
+- `vignette("summarize-endpoint", package = "rkagi")`
+- `vignette("fastgpt-endpoint", package = "rkagi")`
 
 ## Session info
 

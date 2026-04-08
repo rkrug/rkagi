@@ -35,7 +35,8 @@ codes: \code{"EN"}, \code{"BG"}, \code{"CS"}, \code{"DA"}, \code{"DE"}, \code{"E
 \item{cache}{Logical. Whether to allow API-side caching.}
 }
 \value{
-A \code{kagi_summarize_query} object to be passed to \code{\link[=kagi_request]{kagi_request()}}.
+A named list of \code{kagi_summarize_query} objects to be passed to
+\code{\link[=kagi_request]{kagi_request()}}.
 }
 \description{
 Construct a typed S3 object of class \code{kagi_summarize} that describes a

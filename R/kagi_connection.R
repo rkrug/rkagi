@@ -51,7 +51,7 @@ kagi_connection <- function(
   #   stop("Missing API key. Set KAGI_API_KEY or pass api_key.", call. = FALSE)
   # }
 
-  api_key <- resolve_api_key(resolve_api_key(api_key))
+  api_key <- resolve_api_key(api_key)
 
   result <- httr2::request(base_url) |>
     httr2::req_headers(Authorization = paste("Bot", api_key)) |>
@@ -80,9 +80,6 @@ print.kagi_connection <- function(x, ...) {
     "<kagi_connection>\n",
     "  base_url: ",
     x$base_url,
-    "\n",
-    "  endpoint: ",
-    x$endpoint,
     "\n",
     "  api_key:  ",
     masked,

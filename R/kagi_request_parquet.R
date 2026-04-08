@@ -1,39 +1,28 @@
 #' Convert JSON files to Apache Parquet files
 #'
+#' Convert a directory of JSON files written by [kagi_request()] into an
+#' Apache Parquet dataset. JSON files are processed one-by-one and written as
+#' partitioned parquet by `page`.
 #'
-#' The function takes a directory of JSONL files as written from a call to
-#' `pro_request_jsonl(...)` and converts it to a Apache Parquet files. Each
-#' jsonl is processed individually, so there is no limit of the number of records.
-#'
-#' The value `page` as created in `pro_request_jsonl()` is used for partitioning.
-#' All jsonl files are combined into a single Apache Parquet dataset, but can be
-#' filtered out by using the "page". As an example:
-#'
-#' 1. the subfolder in the `output` folder is called `Chunk_1`
-#' 2. the page othe json file represents is `2`
-#' 3. The resulting cvalus for `page` will be `Chunk_1_2`
-#'
-#'
-#' @param input_json The directory of JSON files returned from
-#'   `pro_request(..., json_dir = "FOLDER")`.
+#' @param input_json Directory containing JSON files from [kagi_request()].
 #' @param output output directory for the parquet dataset; default: temporary
 #'   directory.
 #' @param add_columns List of additional fields to be added to the output. They
-#'   nave to be provided as a named list, e./g. `list(column_1 = "value_1",
+#'   have to be provided as a named list, e.g. `list(column_1 = "value_1",
 #'   column_2 = 2)`. Only Scalar values are supported.
 #' @param overwrite Logical indicating whether to overwrite `output`.
-#' @param verbose Logical indicating whether to show a verbose information.
+#' @param verbose Logical indicating whether to print progress information.
 #'   Defaults to `TRUE`
 #' @param delete_input Determines if the `input_json` should be deleted
 #'   afterwards. Defaults to `FALSE`.
 #'
-#' @return The function does returns the output invisibly.
+#' @return Returns `output` invisibly if parquet files were written; otherwise
+#'   `NULL`.
 #'
 #' @details The function uses DuckDB to read the JSON files and to create the
-#'   Apache Parquet files. The function creates a DuckDB connection in memory
-#'   and readsds the JSON files into DuckDB when needed. Then it creates a SQL
-#'   query to convert the JSON files to Apache Parquet files and to copy the
-#'   result to the specified directory.
+#'   Apache Parquet files. It creates an in-memory DuckDB connection, reads each
+#'   JSON response, and writes endpoint-specific tabular data into the parquet
+#'   dataset. Files with `data = null` are skipped.
 #'
 #' @importFrom duckdb duckdb
 #' @importFrom DBI dbConnect dbDisconnect dbExecute
@@ -165,7 +154,7 @@ kagi_request_parquet <- function(
       pn <- pn
     }
 
-    # Check if data is empty in search and enrich ----------------------------
+    # Check if data is empty -------------------------------------------------
 
     data_type <- DBI::dbGetQuery(
       conn = con,
@@ -180,7 +169,7 @@ kagi_request_parquet <- function(
       strsplit(split = "_")
     type <- type[[1]][1]
 
-    if (type %in% c("search", "enrich") && !grepl("^STRUCT", data_type)) {
+    if (length(data_type) == 0 || is.na(data_type) || grepl("NULL", data_type)) {
       if (verbose) {
         message("   No rows in `data`; skipping.")
       }
@@ -218,6 +207,23 @@ kagi_request_parquet <- function(
                 '%s' AS page,
                 UNNEST(res.data) AS u
               FROM read_json_auto('%s') AS res
+              WHERE res.data IS NOT NULL
+          ) TO
+              '%s'
+            (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
+        ",
+        pn,
+        fn,
+        output
+      ),
+      "fastgpt" = sprintf(
+        "
+          COPY (
+              SELECT
+                '%s' AS page,
+                UNNEST(res.data) AS u
+              FROM read_json_auto('%s') AS res
+              WHERE res.data IS NOT NULL
           ) TO
               '%s'
             (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)

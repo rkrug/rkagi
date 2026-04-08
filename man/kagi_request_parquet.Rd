@@ -14,44 +14,34 @@ kagi_request_parquet(
 )
 }
 \arguments{
-\item{input_json}{The directory of JSON files returned from
-\code{pro_request(..., json_dir = "FOLDER")}.}
+\item{input_json}{Directory containing JSON files from \code{\link[=kagi_request]{kagi_request()}}.}
 
 \item{output}{output directory for the parquet dataset; default: temporary
 directory.}
 
 \item{add_columns}{List of additional fields to be added to the output. They
-nave to be provided as a named list, e./g. \code{list(column_1 = "value_1", column_2 = 2)}. Only Scalar values are supported.}
+have to be provided as a named list, e.g. \code{list(column_1 = "value_1", column_2 = 2)}. Only Scalar values are supported.}
 
 \item{overwrite}{Logical indicating whether to overwrite \code{output}.}
 
-\item{verbose}{Logical indicating whether to show a verbose information.
+\item{verbose}{Logical indicating whether to print progress information.
 Defaults to \code{TRUE}}
 
 \item{delete_input}{Determines if the \code{input_json} should be deleted
 afterwards. Defaults to \code{FALSE}.}
 }
 \value{
-The function does returns the output invisibly.
+Returns \code{output} invisibly if parquet files were written; otherwise
+\code{NULL}.
 }
 \description{
-The function takes a directory of JSONL files as written from a call to
-\code{pro_request_jsonl(...)} and converts it to a Apache Parquet files. Each
-jsonl is processed individually, so there is no limit of the number of records.
+Convert a directory of JSON files written by \code{\link[=kagi_request]{kagi_request()}} into an
+Apache Parquet dataset. JSON files are processed one-by-one and written as
+partitioned parquet by \code{page}.
 }
 \details{
-The value \code{page} as created in \code{pro_request_jsonl()} is used for partitioning.
-All jsonl files are combined into a single Apache Parquet dataset, but can be
-filtered out by using the "page". As an example:
-\enumerate{
-\item the subfolder in the \code{output} folder is called \code{Chunk_1}
-\item the page othe json file represents is \code{2}
-\item The resulting cvalus for \code{page} will be \code{Chunk_1_2}
-}
-
 The function uses DuckDB to read the JSON files and to create the
-Apache Parquet files. The function creates a DuckDB connection in memory
-and readsds the JSON files into DuckDB when needed. Then it creates a SQL
-query to convert the JSON files to Apache Parquet files and to copy the
-result to the specified directory.
+Apache Parquet files. It creates an in-memory DuckDB connection, reads each
+JSON response, and writes endpoint-specific tabular data into the parquet
+dataset. Files with \code{data = null} are skipped.
 }

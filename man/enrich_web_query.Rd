@@ -33,10 +33,6 @@ the page title. Each is prefixed with \verb{intitle:}.}
 crossed set of queries (Cartesian product of all combinations of
 \code{query}, \code{filetype}, \code{site}, \code{inurl}, and \code{intitle}). If \code{FALSE},
 concatenate the arguments into a single combined query string.}
-
-\item{open_in_browser}{Logical, default \code{FALSE}. If \code{TRUE}, each generated
-query is immediately opened in the default web browser via
-\code{\link[=open_search_query]{open_search_query()}} for inspection.}
 }
 \value{
 A named list containing query strings of class
@@ -73,8 +69,8 @@ search_query(
   expand = TRUE
 )
 
-# Immediately open in browser
-search_query("openalex api", site = "docs.openalex.org", open_in_browser = TRUE)
+# Open a generated query manually in browser
+open_search_query(search_query("openalex api", site = "docs.openalex.org")[[1]])
 }
 
 }

@@ -19,7 +19,8 @@
 #'   `"TR"`, `"UK"`, `"ZH"`, `"ZH-HANT"`. Default: `"EN"`.
 #' @param cache Logical. Whether to allow API-side caching.
 #'
-#' @return A `kagi_summarize_query` object to be passed to [kagi_request()].
+#' @return A named list of `kagi_summarize_query` objects to be passed to
+#'   [kagi_request()].
 #'
 #' @examples
 #' \dontrun{
@@ -112,11 +113,7 @@ summarize_query <- function(
   }
 
   if (!is.null(cache)) {
-    if (cache) {
-      cache <- "true"
-    } else {
-      cache <- "false"
-    }
+    stopifnot(is.logical(cache), length(cache) == 1L, !is.na(cache))
   }
 
   # Try expansion ----------------------------------------------------------
@@ -136,15 +133,13 @@ summarize_query <- function(
   result <- lapply(
     seq_len(nrow(args)),
     function(i) {
-      res <- setNames(as.character(args[i, , drop = TRUE]), names(args))
+      res <- as.list(args[i, , drop = TRUE])
       class(res) <- c("kagi_summarize_query", class(res))
       return(res)
     }
   )
 
-  if (nrow(args) == 1) {
-    result <- result[[1]]
-  }
+  names(result) <- paste0("query_", seq_along(result))
 
   return(result)
 }

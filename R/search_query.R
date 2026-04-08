@@ -107,13 +107,9 @@ search_query <- function(
 
   query <- trimws(query)
 
-  if (length(query) > 1) {
-    query <- as.list(query)
-    for (i in seq_along(query)) {
-      class(query[[i]]) <- c("kagi_search_query", class(query))
-    }
-  } else {
-    class(query) <- c("kagi_search_query", class(query))
+  query <- as.list(query)
+  for (i in seq_along(query)) {
+    class(query[[i]]) <- c("kagi_search_query", class(query[[i]]))
   }
 
   names(query) <- paste0("query_", seq_along(query))

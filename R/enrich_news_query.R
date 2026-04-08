@@ -20,9 +20,6 @@
 #'   crossed set of queries (Cartesian product of all combinations of
 #'   `query`, `filetype`, `site`, `inurl`, and `intitle`). If `FALSE`,
 #'   concatenate the arguments into a single combined query string.
-#' @param open_in_browser Logical, default `FALSE`. If `TRUE`, each generated
-#'   query is immediately opened in the default web browser via
-#'   [open_search_query()] for inspection.
 #'
 #' @return A named list containing query strings of class
 #'   `kagi_enrich_news_query`, to be used in [kagi_request()].
@@ -56,8 +53,8 @@
 #'   expand = TRUE
 #' )
 #'
-#' # Immediately open in browser
-#' search_query("openalex api", site = "docs.openalex.org", open_in_browser = TRUE)
+#' # Open a generated query manually in browser
+#' open_search_query(search_query("openalex api", site = "docs.openalex.org")[[1]])
 #' }
 #'
 #' @md
@@ -80,12 +77,8 @@ enrich_news_query <- function(
     open_in_browser = FALSE
   )
 
-  if (length(query) > 1) {
-    for (i in seq_along(query)) {
-      class(query[[i]]) <- c("kagi_enrich_web_query", class(query))
-    }
-  } else {
-    class(query) <- c("kagi_enrich_web_query", class(query))
+  for (i in seq_along(query)) {
+    class(query[[i]]) <- c("kagi_enrich_news_query", class(query[[i]]))
   }
 
   names(query) <- paste0("query_", seq_along(query))
@@ -94,7 +87,7 @@ enrich_news_query <- function(
 }
 
 #' @export
-print.kagi_enrich_web_query <- function(x, ...) {
+print.kagi_enrich_news_query <- function(x, ...) {
   cat(
     "<kagi_enrich_news_query>\n"
   )
