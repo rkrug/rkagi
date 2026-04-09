@@ -5,19 +5,19 @@ http_interactions:
   response:
     status: 200
     headers:
-      x-request-id: 565214960caefb6a02a6768f3ae73d03
-      x-kagi-trace: 565214960caefb6a02a6768f3ae73d03
+      x-request-id: ee3023254caa31720c5e46946a56ba32
+      x-kagi-trace: ee3023254caa31720c5e46946a56ba32
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
-      content-length: '1322'
+      content-length: '1321'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:45 GMT
+      date: Thu, 09 Apr 2026 07:20:59 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"565214960caefb6a02a6768f3ae73d03","node":"europe-west4","ms":592,"api_balance":102.492337},"data":[{"t":0,"url":"https://www.climatecodered.org/2026/03/sustainable-aviation-qantass-climate.html","title":"\"Sustainable\"
+      string: '{"meta":{"id":"ee3023254caa31720c5e46946a56ba32","node":"europe-west4","ms":609,"api_balance":102.463337},"data":[{"t":0,"url":"https://www.climatecodered.org/2026/03/sustainable-aviation-qantass-climate.html","title":"\"Sustainable\"
         aviation? Qantas''s climate policy is heading for a crash landing","snippet":"Rising
         fuel costs and disrupted flight paths, a consequence of the unprovoked and
         illegal attack on Iran by Israel and the US, are not the biggest risk to Qantas’s
@@ -43,5 +43,5 @@ http_interactions:
         but we have collectively failed to convert. The 2025 report from the Institute
         and Faculty of Actuaries on Planetary Solvency forewarned, “Current climate
         policies risk catastroph..","published":"2026-04-06T07:00:00Z"}]}'
-  recorded_at: 2026-04-08 12:16:43
+  recorded_at: 2026-04-09 07:20:57
 recorded_with: VCR-vcr/2.0.0

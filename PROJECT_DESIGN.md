@@ -1,8 +1,8 @@
-# rkagi Design Philosophy and Project Context (for AI Coding Agents)
+# kagiPro Design Philosophy and Project Context (for AI Coding Agents)
 
 ## Purpose
 
-`rkagi` is an R-first client for Kagi APIs designed for reproducible data workflows.
+`kagiPro` is an R-first client for Kagi APIs designed for reproducible data workflows.
 
 The package is optimized for users who want to:
 
@@ -32,6 +32,9 @@ This document is intended for AI assistants (for example Codex, Claude Code, and
 
 6. Analysis handoff as a first-class workflow.
    `kagi_request_parquet()` converts JSON collections to parquet for downstream processing.
+7. Interop-first adapters.
+   Additive bridge helpers (for example OpenAlex-style vector input) should expose strict
+   downstream-friendly schemas without changing core request contracts.
 
 ## Public Workflow Contract
 
@@ -48,11 +51,11 @@ This contract should remain stable across releases.
 
 Current endpoint constructors:
 
-- `search_query()`
-- `enrich_web_query()`
-- `enrich_news_query()`
-- `summarize_query()`
-- `fastgpt_query()`
+- `query_search()`
+- `query_enrich_web()`
+- `query_enrich_news()`
+- `query_summarize()`
+- `query_fastgpt()`
 
 All constructors should:
 
@@ -123,18 +126,25 @@ Agent-oriented operational guidance is packaged in `inst/skills`.
 
 Skills are intended to be strict execution guidance for coding agents and must remain aligned with package behavior and vignette examples.
 
-## Recent Change Summary (toward 0.3.0)
+## Recent Change Summary (toward 0.4.0)
 
 Key project-level changes reflected in this cycle:
 
 - Standardized query constructor behavior to named lists.
-- Added/expanded FastGPT endpoint support via `fastgpt_query()`.
+- Renamed endpoint constructors to `query_<endpoint>`:
+  - `query_search()`
+  - `query_enrich_web()`
+  - `query_enrich_news()`
+  - `query_summarize()`
+  - `query_fastgpt()`
+- Added/expanded FastGPT endpoint support via `query_fastgpt()`.
 - Added graceful fallback behavior in `kagi_request()` with dummy outputs.
 - Ensured dummy outputs can flow through parquet conversion.
 - Strengthened tests around mixed success/failure request lists.
 - Consolidated cassette location and vcr helper setup.
 - Updated quickstart and added endpoint-focused vignettes.
 - Aligned pkgdown output and article organization.
+- Added OpenAlex-style bridge output via `add_sbstract_to_parquet()` with deterministic URL-hash IDs.
 - Added AI-agent skills under `inst/skills` for maintainer and endpoint-specific workflows.
 - Added standard disclaimer and AI-assisted development notice to README.
 - Removed unused legacy assets from `inst/` (old extdata, plantuml diagrams, query_test script).

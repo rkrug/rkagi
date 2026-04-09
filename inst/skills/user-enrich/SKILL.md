@@ -1,6 +1,6 @@
 ---
 name: user-enrich
-description: Use this skill for rkagi Enrich endpoint workflows across web and news, including batch execution, error handling, and parquet conversion.
+description: Use this skill for kagiPro Enrich endpoint workflows across web and news, including batch execution, error handling, and parquet conversion.
 ---
 
 # User Enrich Workflow
@@ -10,15 +10,15 @@ Use this skill for Enrich tasks aligned with `vignettes/enrich-endpoint.qmd`.
 ## Required Workflow Order
 
 1. Create `kagi_connection()`.
-2. Build query objects with `enrich_web_query()` or `enrich_news_query()`.
+2. Build query objects with `query_enrich_web()` or `query_enrich_news()`.
 3. Execute with `kagi_request()`.
 4. Optionally convert with `kagi_request_parquet()`.
 
 ## Allowed Function Set
 
 - `kagi_connection()`
-- `enrich_web_query()`
-- `enrich_news_query()`
+- `query_enrich_web()`
+- `query_enrich_news()`
 - `kagi_request()`
 - `kagi_request_parquet()`
 

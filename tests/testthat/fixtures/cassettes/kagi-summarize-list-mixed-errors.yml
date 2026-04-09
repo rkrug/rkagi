@@ -11,21 +11,21 @@ http_interactions:
   response:
     status: 500
     headers:
-      x-request-id: 7938de873246d0af1d5f0e4e3476c441
-      x-kagi-trace: 7938de873246d0af1d5f0e4e3476c441
+      x-request-id: 81285b72106c3a1f60e1f830471ab445
+      x-kagi-trace: 81285b72106c3a1f60e1f830471ab445
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
       content-length: '220'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:45 GMT
+      date: Thu, 09 Apr 2026 07:21:03 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"7938de873246d0af1d5f0e4e3476c441","node":"europe-west4","ms":27,"api_balance":102.492337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
+      string: '{"meta":{"id":"81285b72106c3a1f60e1f830471ab445","node":"europe-west4","ms":25,"api_balance":102.463337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
         are sorry, we were not able to process this. (Min document size not reached)","ref":null}]}'
-  recorded_at: 2026-04-08 12:16:43
+  recorded_at: 2026-04-09 07:21:01
 - request:
     method: POST
     uri: https://kagi.com/api/v0/summarize
@@ -34,19 +34,19 @@ http_interactions:
   response:
     status: 500
     headers:
-      x-request-id: c6ee71cd3bfa681698ae8041a02f69a8
-      x-kagi-trace: c6ee71cd3bfa681698ae8041a02f69a8
+      x-request-id: 1402a5b591fb1be8119b5f2d20143ea9
+      x-kagi-trace: 1402a5b591fb1be8119b5f2d20143ea9
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
       content-length: '219'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:45 GMT
+      date: Thu, 09 Apr 2026 07:21:03 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"c6ee71cd3bfa681698ae8041a02f69a8","node":"europe-west4","ms":28,"api_balance":102.492337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
+      string: '{"meta":{"id":"1402a5b591fb1be8119b5f2d20143ea9","node":"europe-west4","ms":45,"api_balance":102.463337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
         are sorry, we were not able to process this. (Min document size not reached)","ref":null}]}'
-  recorded_at: 2026-04-08 12:16:43
+  recorded_at: 2026-04-09 07:21:01
 recorded_with: VCR-vcr/2.0.0

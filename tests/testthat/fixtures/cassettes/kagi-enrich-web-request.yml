@@ -5,19 +5,19 @@ http_interactions:
   response:
     status: 200
     headers:
-      x-request-id: 263b6f74b93e20b3ca36c5ee420b2e22
-      x-kagi-trace: 263b6f74b93e20b3ca36c5ee420b2e22
+      x-request-id: 349f4324e1b6ca3edf834c4a345fe16b
+      x-kagi-trace: 349f4324e1b6ca3edf834c4a345fe16b
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
-      content-length: '5486'
+      content-length: '5487'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:44 GMT
+      date: Thu, 09 Apr 2026 07:20:58 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"263b6f74b93e20b3ca36c5ee420b2e22","node":"europe-west4","ms":680,"api_balance":102.494337},"data":[{"t":0,"url":"https://shkspr.mobi/blog/2015/02/almost-open-data/","title":"*Almost*
+      string: '{"meta":{"id":"349f4324e1b6ca3edf834c4a345fe16b","node":"europe-west4","ms":813,"api_balance":102.465337},"data":[{"t":0,"url":"https://shkspr.mobi/blog/2015/02/almost-open-data/","title":"*Almost*
         Open Data","snippet":"Inspired by a session at Open Data Camp called &quot;Open
         Data Horror Stories&quot;) I would like this data, please, in a format which
         I can edit, such as a CSV file, or one which I can enter into a mapping service,
@@ -150,5 +150,5 @@ http_interactions:
         areas with the highest risk of fire-related fatalities, the team augmented
         ..","published":"2015-05-22T14:03:43Z"},{"t":0,"url":"https://web.archive.org/web/20160304012151/https://data.oaklandnet.com/browse?q=alpr","title":"Search
         & Browse | Open Data Portal","snippet":"Last Updated Last Updated Last Updated","published":"2016-03-04T01:21:51Z"}]}'
-  recorded_at: 2026-04-08 12:16:42
+  recorded_at: 2026-04-09 07:20:56
 recorded_with: VCR-vcr/2.0.0

@@ -5,7 +5,7 @@ Source of truth: `vignettes/enrich-endpoint.qmd`.
 ## Sequence
 
 1. Build connection.
-2. Build web queries with `enrich_web_query()` and/or news queries with `enrich_news_query()`.
+2. Build web queries with `query_enrich_web()` and/or news queries with `query_enrich_news()`.
 3. Execute with `kagi_request()`.
 4. For recurring monitoring, run batch query lists.
 5. Convert with `kagi_request_parquet()`.

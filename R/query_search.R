@@ -2,9 +2,8 @@
 #'
 #' Construct one or more query strings for the Kagi Search API by combining
 #' free-text terms with structured operators such as `filetype:`, `site:`,
-#' `inurl:`, and `intitle:`.
-#' Use [kagi_request()] to execute the request
-#' and obtain the json replies.
+#' `inurl:`, and `intitle:`. Queries can either be concatenated into a
+#' single string or expanded into a Cartesian product of all combinations.
 #'
 #' @param query Character vector of free-text query terms (required).
 #'   These can include quoted phrases and boolean operators.
@@ -20,9 +19,12 @@
 #'   crossed set of queries (Cartesian product of all combinations of
 #'   `query`, `filetype`, `site`, `inurl`, and `intitle`). If `FALSE`,
 #'   concatenate the arguments into a single combined query string.
+#' @param open_in_browser Logical, default `FALSE`. If `TRUE`, each generated
+#'   query is immediately opened in the default web browser via
+#'   [open_search_query()] for inspection.
 #'
-#' @return A named list containing query strings of class
-#'   `kagi_enrich_web_query`, to be used in [kagi_request()].
+#' @return A named list containing the query strings of type `kagi_query_search`,
+#'   to be used in [kagi_request()].
 #'
 #' @details
 #' This helper makes it easy to build reproducible, complex queries with
@@ -38,7 +40,7 @@
 #' @examples
 #' \dontrun{
 #' # Single combined query
-#' search_query(
+#' query_search(
 #'   query = "biodiversity",
 #'   filetype = c("pdf", "docx"),
 #'   site = "example.com",
@@ -46,50 +48,85 @@
 #' )
 #'
 #' # Expanded combinations
-#' search_query(
+#' query_search(
 #'   query = c("biodiversity", "ecosystem"),
 #'   filetype = c("pdf", "docx"),
 #'   site = c("example.com", "gov"),
 #'   expand = TRUE
 #' )
 #'
-#' # Open a generated query manually in browser
-#' open_search_query(search_query("openalex api", site = "docs.openalex.org")[[1]])
+#' # Immediately open in browser
+#' query_search("openalex api", site = "docs.openalex.org", open_in_browser = TRUE)
 #' }
 #'
 #' @md
 #' @export
-enrich_web_query <- function(
+query_search <- function(
   query,
   filetype = NULL,
   site = NULL,
   inurl = NULL,
   intitle = NULL,
-  expand = TRUE
+  expand = TRUE,
+  open_in_browser = FALSE
 ) {
-  query <- search_query(
-    query = query,
-    filetype = filetype,
-    site = site,
-    inurl = inurl,
-    intitle = intitle,
-    expand = expand,
-    open_in_browser = FALSE
-  )
+  combine <- function(x, prefix = "") {
+    if (is.null(x)) {
+      return("")
+    }
+    x <- as.character(x)
+    x <- trimws(x)
+    x[nzchar(x)]
+    paste0(prefix, x)
+  }
 
+  if (expand) {
+    query <- expand.grid(
+      combine(query),
+      combine(filetype, "filetype:"),
+      combine(site, "site:"),
+      combine(inurl, "inurl:"),
+      combine(intitle, "intitle:"),
+      stringsAsFactors = FALSE
+    ) |>
+      apply(
+        1,
+        paste,
+        collapse = " "
+      )
+  } else {
+    query <- paste(
+      combine(query),
+      combine(filetype, "filetype:"),
+      combine(site, "site:"),
+      combine(inurl, "inurl:"),
+      combine(intitle, "intitle:"),
+      sep = " "
+    )
+  }
+
+  query <- trimws(query)
+
+  query <- as.list(query)
   for (i in seq_along(query)) {
-    class(query[[i]]) <- c("kagi_enrich_web_query", class(query[[i]]))
+    class(query[[i]]) <- c("kagi_query_search", class(query[[i]]))
   }
 
   names(query) <- paste0("query_", seq_along(query))
+
+  if (open_in_browser) {
+    for (x in query) {
+      open_search_query(x)
+    }
+  }
 
   return(query)
 }
 
 #' @export
-print.kagi_enrich_web_query <- function(x, ...) {
+print.kagi_query_search <- function(x, ...) {
   cat(
-    "<kagi_enrich_web_query>\n"
+    "<kagi_query_search>\n"
   )
   for (i in 1:length(x)) {
     paste0(

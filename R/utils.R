@@ -20,9 +20,9 @@ resolve_api_key <- function(api_key) {
 }
 
 
-#' Build a User-Agent string for rkagi
+#' Build a User-Agent string for kagiPro
 #' @keywords internal
-rkagi_user_agent <- function() {
-  pkg <- utils::packageDescription("rkagi")
+kagiPro_user_agent <- function() {
+  pkg <- utils::packageDescription("kagiPro")
   paste0(pkg$Package, "/", pkg$Version)
 }

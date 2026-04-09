@@ -1,8 +1,10 @@
-# rkagi 0.3.0
+# kagiPro 0.4.0
 
 ## Features
 
-- Added endpoint-specific query support for FastGPT via `fastgpt_query()`.
+- Added endpoint-specific query support for FastGPT via `query_fastgpt()`.
+- Added OpenAlex bridge helper `add_sbstract_to_parquet()` to produce strict
+  `id` / `Title` / `Abstract` tables from Search + Summarize outputs.
 - Standardized query constructor outputs to named lists across endpoints.
 - Extended `kagi_request()` with `error_mode` (`"stop"`, `"write_dummy"`) for strict vs resilient execution modes.
 - Improved handling of mixed query lists so long batch runs can continue with structured dummy outputs on failure.
@@ -21,7 +23,13 @@
 
 ## Breaking Changes
 
-- Query constructors now consistently return named lists. Code that previously assumed a bare single query object may require `[[1]]` indexing in some direct calls.
+- Renamed query constructors to `query_<endpoint>` for discoverability:
+  - `search_query()` -> `query_search()`
+  - `enrich_web_query()` -> `query_enrich_web()`
+  - `enrich_news_query()` -> `query_enrich_news()`
+  - `summarize_query()` -> `query_summarize()`
+  - `fastgpt_query()` -> `query_fastgpt()`
+- Query constructors consistently return named lists. Code that previously assumed a bare single query object may require `[[1]]` indexing in some direct calls.
 - Error behavior can now be configured explicitly; strict failure remains default, but resilient mode writes dummy payloads and warnings instead of stopping.
 
 ## Documentation

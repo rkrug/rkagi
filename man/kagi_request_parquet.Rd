@@ -10,7 +10,8 @@ kagi_request_parquet(
   add_columns = list(),
   overwrite = FALSE,
   verbose = TRUE,
-  delete_input = FALSE
+  delete_input = FALSE,
+  add_abstract = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ Defaults to \code{TRUE}}
 
 \item{delete_input}{Determines if the \code{input_json} should be deleted
 afterwards. Defaults to \code{FALSE}.}
+
+\item{add_abstract}{Logical. If \code{TRUE}, call \code{\link[=add_sbstract_to_parquet]{add_sbstract_to_parquet()}}
+after conversion to add an \code{Abstract} column for supported endpoint
+outputs (\code{search}, \code{enrich_web}, \code{enrich_news}, \code{enrich}).}
 }
 \value{
 Returns \code{output} invisibly if parquet files were written; otherwise
@@ -44,4 +49,13 @@ The function uses DuckDB to read the JSON files and to create the
 Apache Parquet files. It creates an in-memory DuckDB connection, reads each
 JSON response, and writes endpoint-specific tabular data into the parquet
 dataset. Files with \code{data = null} are skipped.
+
+Output parquet rows include an \code{id} column for traceability:
+\itemize{
+\item Search: \verb{SEARCH_<hash>} from normalized \code{url} when available.
+\item Enrich web: \verb{ENRICH_WEB_<hash>} from normalized \code{url} when available.
+\item Enrich news: \verb{ENRICH_NEWS_<hash>} from normalized \code{url} when available.
+\item Summarize: \verb{SUMMARIZE_<hash>} from request metadata.
+\item FastGPT: \verb{FASTGPT_<hash>} from request metadata.
+}
 }

@@ -1,4 +1,4 @@
-# rkagi <a href="https://rkrug.github.io/rkagi/"><img src="https://rkrug.github.io/rkagi/logo.png" align="right" height="139" /></a>
+# kagiPro <a href="https://rkrug.github.io/kagiPro/"><img src="https://rkrug.github.io/kagiPro/logo.png" align="right" height="139" /></a>
 
 > R client for the [Kagi API](https://help.kagi.com/kagi/api/).
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-`rkagi` provides a lightweight R interface to the **Kagi API**, including:
+`kagiPro` provides a lightweight R interface to the **Kagi API**, including:
 
 - **Search API** — perform web searches with advanced operators
 - **Enrich API** — get higher-signal results from specialized indices
@@ -26,7 +26,7 @@ The package follows the [rOpenSci](https://ropensci.org) style for API clients:
 ```r
 # Install the development version from GitHub
 # install.packages("remotes")
-remotes::install_github("rkrug/rkagi")
+remotes::install_github("rkrug/kagiPro")
 ```
 
 ---
@@ -54,10 +54,10 @@ conn <- kagi_connection(
 ## Example
 
 ```r
-library(rkagi)
+library(kagiPro)
 
 # Build a query
-q <- search_query(
+q <- query_search(
   query    = 'biodiversity "annual report"',
   filetype = "pdf",
   site     = "example.com",
@@ -66,7 +66,7 @@ q <- search_query(
 
 # Execute request and write JSON output
 conn <- kagi_connection(api_key = function() keyring::key_get("API_kagi"))
-out <- tempfile("rkagi-search-")
+out <- tempfile("kagiPro-search-")
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -83,27 +83,50 @@ kagi_request(
 ## Documentation
 
 A detailed **Quickstart vignette** is included and available at:  
-👉 <https://rkrug.github.io/rkagi/articles/quickstart.html>
+👉 <https://rkrug.github.io/kagiPro/articles/quickstart.html>
 
 Endpoint guides are available at:
-- <https://rkrug.github.io/rkagi/articles/search-endpoint.html>
-- <https://rkrug.github.io/rkagi/articles/enrich-endpoint.html>
-- <https://rkrug.github.io/rkagi/articles/summarize-endpoint.html>
-- <https://rkrug.github.io/rkagi/articles/fastgpt-endpoint.html>
+- <https://rkrug.github.io/kagiPro/articles/search-endpoint.html>
+- <https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html>
+- <https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html>
+- <https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html>
 
 AI-agent skills (for Codex/Claude-style workflows) are packaged under:
 - `inst/skills/`
 - `inst/skills/README.md` (index and selection rules)
 
 The full reference and function documentation is published via **pkgdown** at:  
-👉 <https://rkrug.github.io/rkagi/>
+👉 <https://rkrug.github.io/kagiPro/>
+
+---
+
+## OpenAlexPro Bridge
+
+`kagiPro` includes `add_sbstract_to_parquet()` to call the Summarize endpoint for
+Search results and write an augmented Search parquet dataset with an
+`Abstract` column.
+
+```r
+# out_input_parquet is produced by kagi_request_parquet() from Search JSON
+out_search_with_abs <- add_sbstract_to_parquet(
+  connection = conn,
+  input_parquet = out_input_parquet,
+  output = "search_with_abstract",
+  overwrite = TRUE
+)
+
+## Result parquet now includes Abstract (plus existing id/title/url/page...)
+```
+
+Search parquet `id` values are deterministic URL hashes, so enriched records can
+be tracked back consistently.
 
 ---
 
 ## Contributing
 
 Bug reports and pull requests are welcome at:  
-<https://github.com/rkrug/rkagi>
+<https://github.com/rkrug/kagiPro>
 
 ---
 

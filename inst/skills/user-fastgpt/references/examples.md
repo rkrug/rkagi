@@ -1,7 +1,7 @@
 # FastGPT Examples
 
 ```r
-q_fast <- fastgpt_query(
+q_fast <- query_fastgpt(
   query = "What is Python 3.11?",
   cache = TRUE,
   web_search = TRUE

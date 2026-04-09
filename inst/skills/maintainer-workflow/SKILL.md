@@ -1,6 +1,6 @@
 ---
 name: maintainer-workflow
-description: Use this skill when changing rkagi internals, tests, docs, release metadata, or endpoint behavior. Covers design principles, naming principles, testing with vcr, and release hygiene.
+description: Use this skill when changing kagiPro internals, tests, docs, release metadata, or endpoint behavior. Covers design principles, naming principles, testing with vcr, and release hygiene.
 ---
 
 # Maintainer Workflow
@@ -37,7 +37,7 @@ Read `references/design-principles.md` before modifying request behavior.
 
 Enforce these naming rules:
 
-- Query constructors use `*_query` names (for example `search_query`, `fastgpt_query`).
+- Query constructors use `query_<endpoint>` names (for example `query_search`, `query_fastgpt`).
 - Request executors are generic (`kagi_request`, `kagi_request_parquet`).
 - Constructor output contract remains consistent across endpoints.
 - Output folders should be explicit and stable in examples/tests.
@@ -76,4 +76,3 @@ Read `references/release-checklist.md` before finalizing.
 - Do not claim endpoint capabilities not present in code/tests.
 - Keep user-facing docs narrative, but keep this skill imperative and concise.
 - If behavior changes, update tests and docs in the same change set.
-

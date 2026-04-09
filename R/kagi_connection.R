@@ -55,7 +55,7 @@ kagi_connection <- function(
 
   result <- httr2::request(base_url) |>
     httr2::req_headers(Authorization = paste("Bot", api_key)) |>
-    httr2::req_user_agent(rkagi_user_agent()) |>
+    httr2::req_user_agent(kagiPro_user_agent()) |>
     httr2::req_retry(max_tries = max_tries) |>
     httr2::req_error(is_error = ~ .x$status_code >= 400)
 

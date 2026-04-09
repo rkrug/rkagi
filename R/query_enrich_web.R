@@ -22,7 +22,7 @@
 #'   concatenate the arguments into a single combined query string.
 #'
 #' @return A named list containing query strings of class
-#'   `kagi_enrich_news_query`, to be used in [kagi_request()].
+#'   `kagi_query_enrich_web`, to be used in [kagi_request()].
 #'
 #' @details
 #' This helper makes it easy to build reproducible, complex queries with
@@ -38,7 +38,7 @@
 #' @examples
 #' \dontrun{
 #' # Single combined query
-#' search_query(
+#' query_search(
 #'   query = "biodiversity",
 #'   filetype = c("pdf", "docx"),
 #'   site = "example.com",
@@ -46,7 +46,7 @@
 #' )
 #'
 #' # Expanded combinations
-#' search_query(
+#' query_search(
 #'   query = c("biodiversity", "ecosystem"),
 #'   filetype = c("pdf", "docx"),
 #'   site = c("example.com", "gov"),
@@ -54,12 +54,12 @@
 #' )
 #'
 #' # Open a generated query manually in browser
-#' open_search_query(search_query("openalex api", site = "docs.openalex.org")[[1]])
+#' open_search_query(query_search("openalex api", site = "docs.openalex.org")[[1]])
 #' }
 #'
 #' @md
 #' @export
-enrich_news_query <- function(
+query_enrich_web <- function(
   query,
   filetype = NULL,
   site = NULL,
@@ -67,7 +67,7 @@ enrich_news_query <- function(
   intitle = NULL,
   expand = TRUE
 ) {
-  query <- search_query(
+  query <- query_search(
     query = query,
     filetype = filetype,
     site = site,
@@ -78,7 +78,7 @@ enrich_news_query <- function(
   )
 
   for (i in seq_along(query)) {
-    class(query[[i]]) <- c("kagi_enrich_news_query", class(query[[i]]))
+    class(query[[i]]) <- c("kagi_query_enrich_web", class(query[[i]]))
   }
 
   names(query) <- paste0("query_", seq_along(query))
@@ -87,9 +87,9 @@ enrich_news_query <- function(
 }
 
 #' @export
-print.kagi_enrich_news_query <- function(x, ...) {
+print.kagi_query_enrich_web <- function(x, ...) {
   cat(
-    "<kagi_enrich_news_query>\n"
+    "<kagi_query_enrich_web>\n"
   )
   for (i in 1:length(x)) {
     paste0(

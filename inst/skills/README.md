@@ -1,6 +1,6 @@
-# rkagi Skills Index
+# kagiPro Skills Index
 
-This folder contains AI-agent skills for working with `rkagi`.
+This folder contains AI-agent skills for working with `kagiPro`.
 
 ## Skills
 

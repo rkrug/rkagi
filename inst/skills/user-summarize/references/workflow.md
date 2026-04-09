@@ -5,7 +5,7 @@ Source of truth: `vignettes/summarize-endpoint.qmd`.
 ## Sequence
 
 1. Build connection.
-2. Build query objects with `summarize_query()` (URL mode or text mode).
+2. Build query objects with `query_summarize()` (URL mode or text mode).
 3. Execute with `kagi_request()`.
 4. For mixed batches, pass explicit query lists.
 5. Convert with `kagi_request_parquet()` if needed.

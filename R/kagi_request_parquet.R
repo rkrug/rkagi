@@ -15,6 +15,9 @@
 #'   Defaults to `TRUE`
 #' @param delete_input Determines if the `input_json` should be deleted
 #'   afterwards. Defaults to `FALSE`.
+#' @param add_abstract Logical. If `TRUE`, call [add_sbstract_to_parquet()]
+#'   after conversion to add an `Abstract` column for supported endpoint
+#'   outputs (`search`, `enrich_web`, `enrich_news`, `enrich`).
 #'
 #' @return Returns `output` invisibly if parquet files were written; otherwise
 #'   `NULL`.
@@ -23,6 +26,13 @@
 #'   Apache Parquet files. It creates an in-memory DuckDB connection, reads each
 #'   JSON response, and writes endpoint-specific tabular data into the parquet
 #'   dataset. Files with `data = null` are skipped.
+#'
+#'   Output parquet rows include an `id` column for traceability:
+#'   - Search: `SEARCH_<hash>` from normalized `url` when available.
+#'   - Enrich web: `ENRICH_WEB_<hash>` from normalized `url` when available.
+#'   - Enrich news: `ENRICH_NEWS_<hash>` from normalized `url` when available.
+#'   - Summarize: `SUMMARIZE_<hash>` from request metadata.
+#'   - FastGPT: `FASTGPT_<hash>` from request metadata.
 #'
 #' @importFrom duckdb duckdb
 #' @importFrom DBI dbConnect dbDisconnect dbExecute
@@ -37,7 +47,8 @@ kagi_request_parquet <- function(
   add_columns = list(),
   overwrite = FALSE,
   verbose = TRUE,
-  delete_input = FALSE
+  delete_input = FALSE,
+  add_abstract = FALSE
 ) {
   output_check <- function(output, overwrite, verbose) {
     if (dir.exists(output)) {
@@ -70,6 +81,9 @@ kagi_request_parquet <- function(
   ## Check if output is specified
   if (is.null(output)) {
     stop("No output to convert to specified!")
+  }
+  if (!is.logical(add_abstract) || length(add_abstract) != 1L || is.na(add_abstract)) {
+    stop("`add_abstract` must be TRUE or FALSE.")
   }
 
   output_check(output, overwrite, verbose)
@@ -164,10 +178,8 @@ kagi_request_parquet <- function(
       )
     )$type
 
-    type <- fn |>
-      basename() |>
-      strsplit(split = "_")
-    type <- type[[1]][1]
+    type <- basename(fn)
+    type <- sub("_[0-9]+\\.json$", "", type)
 
     if (length(data_type) == 0 || is.na(data_type) || grepl("NULL", data_type)) {
       if (verbose) {
@@ -185,6 +197,12 @@ kagi_request_parquet <- function(
           COPY (
             SELECT
               page,
+              CASE
+                WHEN u.url IS NOT NULL AND u.url <> '' THEN
+                  concat('SEARCH_', md5(lower(regexp_replace(trim(u.url), '#.*$', ''))))
+                ELSE
+                  concat('SEARCH_', md5(concat('%s', '::', coalesce(cast(u.t AS VARCHAR), 'na'))))
+              END AS id,
               u.*
             FROM (
               SELECT
@@ -197,21 +215,24 @@ kagi_request_parquet <- function(
           (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
         ",
         pn,
+        pn,
         fn,
         output
       ),
       "summarize" = sprintf(
         "
           COPY (
-              SELECT
-                '%s' AS page,
-                UNNEST(res.data) AS u
-              FROM read_json_auto('%s') AS res
-              WHERE res.data IS NOT NULL
+            SELECT
+              '%s' AS page,
+              concat('SUMMARIZE_', md5(coalesce(cast(res.meta.id AS VARCHAR), '%s'))) AS id,
+              UNNEST(res.data) AS u
+            FROM read_json_auto('%s') AS res
+            WHERE res.data IS NOT NULL
           ) TO
               '%s'
             (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
         ",
+        pn,
         pn,
         fn,
         output
@@ -219,15 +240,71 @@ kagi_request_parquet <- function(
       "fastgpt" = sprintf(
         "
           COPY (
-              SELECT
-                '%s' AS page,
-                UNNEST(res.data) AS u
-              FROM read_json_auto('%s') AS res
-              WHERE res.data IS NOT NULL
+            SELECT
+              '%s' AS page,
+              concat('FASTGPT_', md5(coalesce(cast(res.meta.id AS VARCHAR), '%s'))) AS id,
+              UNNEST(res.data) AS u
+            FROM read_json_auto('%s') AS res
+            WHERE res.data IS NOT NULL
           ) TO
               '%s'
             (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
         ",
+        pn,
+        pn,
+        fn,
+        output
+      ),
+      "enrich_web" = sprintf(
+        "
+          COPY (
+            SELECT
+              page,
+              CASE
+                WHEN u.url IS NOT NULL AND u.url <> '' THEN
+                  concat('ENRICH_WEB_', md5(lower(regexp_replace(trim(u.url), '#.*$', ''))))
+                ELSE
+                  concat('ENRICH_WEB_', md5(concat('%s', '::', coalesce(cast(u.t AS VARCHAR), 'na'))))
+              END AS id,
+              u.*
+            FROM (
+              SELECT
+                '%s' AS page,
+                UNNEST(res.data) AS u
+              FROM read_json_auto('%s') AS res
+            )
+          ) TO
+            '%s'
+          (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
+        ",
+        pn,
+        pn,
+        fn,
+        output
+      ),
+      "enrich_news" = sprintf(
+        "
+          COPY (
+            SELECT
+              page,
+              CASE
+                WHEN u.url IS NOT NULL AND u.url <> '' THEN
+                  concat('ENRICH_NEWS_', md5(lower(regexp_replace(trim(u.url), '#.*$', ''))))
+                ELSE
+                  concat('ENRICH_NEWS_', md5(concat('%s', '::', coalesce(cast(u.t AS VARCHAR), 'na'))))
+              END AS id,
+              u.*
+            FROM (
+              SELECT
+                '%s' AS page,
+                UNNEST(res.data) AS u
+              FROM read_json_auto('%s') AS res
+            )
+          ) TO
+            '%s'
+          (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
+        ",
+        pn,
         pn,
         fn,
         output
@@ -237,6 +314,12 @@ kagi_request_parquet <- function(
           COPY (
             SELECT
               page,
+              CASE
+                WHEN u.url IS NOT NULL AND u.url <> '' THEN
+                  concat('ENRICH_', md5(lower(regexp_replace(trim(u.url), '#.*$', ''))))
+                ELSE
+                  concat('ENRICH_', md5(concat('%s', '::', coalesce(cast(u.t AS VARCHAR), 'na'))))
+              END AS id,
               u.*
             FROM (
               SELECT
@@ -248,6 +331,7 @@ kagi_request_parquet <- function(
             '%s'
           (FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'page', APPEND)
         ",
+        pn,
         pn,
         fn,
         output
@@ -272,6 +356,32 @@ kagi_request_parquet <- function(
   }
 
   if (file.exists(output)) {
+    if (isTRUE(add_abstract) && length(jsons) > 0) {
+      endpoint <- basename(jsons[[1]])
+      endpoint <- sub("_[0-9]+\\.json$", "", endpoint)
+      abstract_supported <- endpoint %in% c("search", "enrich", "enrich_web", "enrich_news")
+
+      if (abstract_supported) {
+        conn <- kagi_connection()
+        add_sbstract_to_parquet(
+          connection = conn,
+          input_parquet = output,
+          output = output,
+          overwrite = TRUE,
+          error_mode = "write_dummy",
+          verbose = verbose
+        )
+      } else {
+        warning(
+          "`add_abstract = TRUE` is currently supported only for ",
+          "`search`, `enrich`, `enrich_web`, and `enrich_news` outputs. Detected endpoint: `",
+          endpoint,
+          "`. Skipping abstract augmentation.",
+          call. = FALSE
+        )
+      }
+    }
+
     if (verbose) {
       message("Output written to `", output, "`")
     }

@@ -1,13 +1,13 @@
 # Enrich Examples
 
 ```r
-q_web <- enrich_web_query(
+q_web <- query_enrich_web(
   query = "open data portals",
   site = "gov",
   expand = FALSE
 )
 
-q_news <- enrich_news_query(
+q_news <- query_enrich_news(
   query = "biodiversity policy",
   expand = FALSE
 )

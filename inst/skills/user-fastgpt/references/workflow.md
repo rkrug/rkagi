@@ -5,7 +5,7 @@ Source of truth: `vignettes/fastgpt-endpoint.qmd`.
 ## Sequence
 
 1. Build connection.
-2. Build query sets with `fastgpt_query()`.
+2. Build query sets with `query_fastgpt()`.
 3. Execute with `kagi_request()`.
 4. Use list queries for batch prompt runs.
 5. Convert with `kagi_request_parquet()` when needed.
