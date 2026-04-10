@@ -1,6 +1,6 @@
-Package: rkagi
+Package: kagiPro
 Title: Kagi API Client for R
-Version: 0.3.0
+Version: 0.4.0
 Description: User-friendly R client for the Kagi APIs (Search, Enrich, Summarizer,
     and FastGPT). Build endpoint-specific query objects, run single or batch
     requests with one reusable connection, and write reproducible JSON outputs
@@ -17,12 +17,17 @@ LazyData: true
 Depends:
     R (>= 4.2.0)
 Imports:
+    arrow,
     DBI, 
+    digest,
+    dplyr,
     duckdb,
     future,
     future.apply,
     httr2,
     jsonlite,
+    rlang,
+    ragnar,
     utils
 Suggests:
     here,
@@ -35,4 +40,6 @@ Suggests:
 VignetteBuilder: knitr, quarto
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
-URL: https://rkrug.github.io/rkagi/
+URL: https://github.com/rkrug/kagiPro,
+    https://rkrug.github.io/kagiPro/
+BugReports: https://github.com/rkrug/kagiPro/issues

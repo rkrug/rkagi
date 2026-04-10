@@ -12,19 +12,19 @@ http_interactions:
   response:
     status: 500
     headers:
-      x-request-id: e32988d7bc4e47bab63da79bad706b8a
-      x-kagi-trace: e32988d7bc4e47bab63da79bad706b8a
+      x-request-id: 9bc5de2db1906c17b4d388a8bedac62f
+      x-kagi-trace: 9bc5de2db1906c17b4d388a8bedac62f
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
-      content-length: '219'
+      content-length: '220'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:44 GMT
+      date: Thu, 09 Apr 2026 07:20:59 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"e32988d7bc4e47bab63da79bad706b8a","node":"europe-west4","ms":23,"api_balance":102.492337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
+      string: '{"meta":{"id":"9bc5de2db1906c17b4d388a8bedac62f","node":"europe-west4","ms":40,"api_balance":102.463337},"data":{"output":null,"tokens":0},"error":[{"code":200,"msg":"We
         are sorry, we were not able to process this. (Min document size not reached)","ref":null}]}'
-  recorded_at: 2026-04-08 12:16:43
+  recorded_at: 2026-04-09 07:20:57
 recorded_with: VCR-vcr/2.0.0

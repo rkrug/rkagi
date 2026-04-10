@@ -1,6 +1,6 @@
 ---
 name: user-search
-description: Use this skill for rkagi Search endpoint workflows, including query construction, batch execution, error_mode selection, and parquet conversion.
+description: Use this skill for kagiPro Search endpoint workflows, including query construction, batch execution, error_mode selection, and parquet conversion.
 ---
 
 # User Search Workflow
@@ -10,17 +10,18 @@ Use this skill for Search endpoint tasks aligned with `vignettes/search-endpoint
 ## Required Workflow Order
 
 1. Create `kagi_connection()`.
-2. Build query objects with `search_query()`.
-3. Execute with `kagi_request()`.
-4. Optionally convert with `kagi_request_parquet()`.
+2. Build query objects with `query_search()`.
+3. Prefer `kagi_fetch()` for project-folder workflows.
+4. Use `kagi_request()` + `kagi_request_parquet()` for low-level control.
 
 Do not skip steps in guidance unless the user already provides a reusable connection.
 
 ## Allowed Function Set
 
 - `kagi_connection()`
-- `search_query()`
+- `query_search()`
 - `open_search_query()`
+- `kagi_fetch()`
 - `kagi_request()`
 - `kagi_request_parquet()`
 
@@ -37,4 +38,3 @@ Do not skip steps in guidance unless the user already provides a reusable connec
 - Mention `workers` when describing parallel execution.
 
 Read `references/workflow.md` for canonical flow and `references/examples.md` for endpoint-aligned snippets.
-

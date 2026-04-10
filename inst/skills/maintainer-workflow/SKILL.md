@@ -1,6 +1,6 @@
 ---
 name: maintainer-workflow
-description: Use this skill when changing rkagi internals, tests, docs, release metadata, or endpoint behavior. Covers design principles, naming principles, testing with vcr, and release hygiene.
+description: Use this skill when changing kagiPro internals, tests, docs, release metadata, or endpoint behavior. Covers design principles, naming principles, testing with vcr, and release hygiene.
 ---
 
 # Maintainer Workflow
@@ -16,7 +16,7 @@ Apply this skill when tasks involve any of the following:
 - Changes in API behavior, error handling, or output contracts.
 - Versioning, changelog/release notes, and documentation synchronization.
 
-For endpoint-only user workflows, use `user-search`, `user-enrich`, `user-summarize`, or `user-fastgpt` instead.
+For endpoint-only user workflows, use `user-search`, `user-enrich`, `user-summarize`, `user-fastgpt`, or `user-corpus-workflow` instead.
 
 ## Required Design Principles
 
@@ -37,7 +37,7 @@ Read `references/design-principles.md` before modifying request behavior.
 
 Enforce these naming rules:
 
-- Query constructors use `*_query` names (for example `search_query`, `fastgpt_query`).
+- Query constructors use `query_<endpoint>` names (for example `query_search`, `query_fastgpt`).
 - Request executors are generic (`kagi_request`, `kagi_request_parquet`).
 - Constructor output contract remains consistent across endpoints.
 - Output folders should be explicit and stable in examples/tests.
@@ -63,8 +63,8 @@ Read `references/testing-and-cassettes.md` before updating fixtures.
 For release-prep changes, execute this checklist:
 
 1. Bump version in `DESCRIPTION`.
-2. Update release notes/changelog (`NES.md`).
-3. Confirm docs are synchronized: README, quickstart, endpoint vignettes, man pages.
+2. Update release notes/changelog (`NEWS.md` and `NES.md`).
+3. Confirm docs are synchronized: `README.md`, `PROJECT_DESIGN.md`, quickstart and endpoint/corpus vignettes, man pages.
 4. Confirm no stale names, paths, or deprecated references remain.
 5. Run regression tests relevant to touched behavior.
 
@@ -76,4 +76,12 @@ Read `references/release-checklist.md` before finalizing.
 - Do not claim endpoint capabilities not present in code/tests.
 - Keep user-facing docs narrative, but keep this skill imperative and concise.
 - If behavior changes, update tests and docs in the same change set.
-
+- Before commit, explicitly verify and update when needed:
+  - `NEWS.md`
+  - `PROJECT_DESIGN.md`
+  - `README.md`
+  - `vignettes/*.qmd` relevant to changed behavior
+- Use detailed commit messages for maintainer changes. Minimum structure:
+  1. short imperative subject,
+  2. grouped bullets for behavioral changes,
+  3. grouped bullets for docs/tests/regenerated artifacts.

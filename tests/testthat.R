@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(rkagi)
+library(kagiPro)
 
-test_check("rkagi")
+test_check("kagiPro")

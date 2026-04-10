@@ -9,6 +9,7 @@ kagi_request_parquet(
   output = NULL,
   add_columns = list(),
   overwrite = FALSE,
+  append = FALSE,
   verbose = TRUE,
   delete_input = FALSE
 )
@@ -24,6 +25,9 @@ have to be provided as a named list, e.g. \code{list(column_1 = "value_1", colum
 
 \item{overwrite}{Logical indicating whether to overwrite \code{output}.}
 
+\item{append}{Logical indicating whether to append/update query partitions in
+an existing \code{output} directory without deleting untouched queries.}
+
 \item{verbose}{Logical indicating whether to print progress information.
 Defaults to \code{TRUE}}
 
@@ -37,11 +41,20 @@ Returns \code{output} invisibly if parquet files were written; otherwise
 \description{
 Convert a directory of JSON files written by \code{\link[=kagi_request]{kagi_request()}} into an
 Apache Parquet dataset. JSON files are processed one-by-one and written as
-partitioned parquet by \code{page}.
+hive-partitioned parquet by \code{query}.
 }
 \details{
 The function uses DuckDB to read the JSON files and to create the
 Apache Parquet files. It creates an in-memory DuckDB connection, reads each
 JSON response, and writes endpoint-specific tabular data into the parquet
 dataset. Files with \code{data = null} are skipped.
+
+Output parquet rows include an \code{id} column for traceability:
+\itemize{
+\item Search: \verb{SEARCH_<hash>} from normalized \code{url} when available.
+\item Enrich web: \verb{ENRICH_WEB_<hash>} from normalized \code{url} when available.
+\item Enrich news: \verb{ENRICH_NEWS_<hash>} from normalized \code{url} when available.
+\item Summarize: \verb{SUMMARIZE_<hash>} from request metadata.
+\item FastGPT: \verb{FASTGPT_<hash>} from request metadata.
+}
 }

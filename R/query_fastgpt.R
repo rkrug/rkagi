@@ -7,7 +7,7 @@
 #' @param cache Logical. Whether cached responses are allowed. Default: `TRUE`.
 #' @param web_search Logical. Whether to use web search enrichment. Default: `TRUE`.
 #'
-#' @return A named list of query objects of class `kagi_fastgpt_query` to be
+#' @return A named list of query objects of class `kagi_query_fastgpt` to be
 #'   used in [kagi_request()].
 #'
 #' @details
@@ -16,13 +16,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' fastgpt_query("Python 3.11")
-#' fastgpt_query(c("Python 3.11", "What is biodiversity?"))
+#' query_fastgpt("Python 3.11")
+#' query_fastgpt(c("Python 3.11", "What is biodiversity?"))
 #' }
 #'
 #' @md
 #' @export
-fastgpt_query <- function(
+query_fastgpt <- function(
   query,
   cache = TRUE,
   web_search = TRUE
@@ -54,7 +54,7 @@ fastgpt_query <- function(
     seq_len(nrow(args)),
     function(i) {
       res <- as.list(args[i, , drop = TRUE])
-      class(res) <- c("kagi_fastgpt_query", class(res))
+      class(res) <- c("kagi_query_fastgpt", class(res))
       res
     }
   )
@@ -65,8 +65,8 @@ fastgpt_query <- function(
 }
 
 #' @export
-print.kagi_fastgpt_query <- function(x, ...) {
-  cat("<kagi_fastgpt_query>\n")
+print.kagi_query_fastgpt <- function(x, ...) {
+  cat("<kagi_query_fastgpt>\n")
   for (nm in names(x)) {
     cat(nm, ': "', x[[nm]], '"\n', sep = "")
   }

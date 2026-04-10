@@ -1,5 +1,5 @@
 ---
-title: "Grey Literature Search on Multiple Websites with rkagi"
+title: "Grey Literature Search on Multiple Websites with kagiPro"
 author: "Rainer Krug"
 format:
   html:
@@ -8,7 +8,7 @@ format:
     code-fold: show
     df-print: paged
 vignette: >
-  %\VignetteIndexEntry{Grey Literature Search using rkagi}
+  %\VignetteIndexEntry{Grey Literature Search using kagiPro}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 execute:
@@ -22,11 +22,11 @@ execute:
 #| label: setup
 
 # devtools::load_all()
-library(rkagi)
+library(kagiPro)
 library(here)
 
 # Paths: read via system.file(); write via here::here() into inst/extdata
-shipped_extdata <- function(filename) system.file("extdata", filename, package = "rkagi")
+shipped_extdata <- function(filename) system.file("extdata", filename, package = "kagiPro")
 write_extdata   <- function(filename) here::here("inst", "extdata", filename)
 ```
 

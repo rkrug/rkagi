@@ -1,7 +1,7 @@
 # Search Examples
 
 ```r
-q <- search_query(
+q <- query_search(
   query = 'biodiversity "annual report"',
   filetype = c("pdf", "docx"),
   site = c("example.com", "gov"),

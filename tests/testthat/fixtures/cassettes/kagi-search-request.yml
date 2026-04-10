@@ -5,23 +5,23 @@ http_interactions:
   response:
     status: 200
     headers:
-      x-request-id: 0e9dcc7cdde4f56e9224f11e736aa8d9
-      x-kagi-trace: 0e9dcc7cdde4f56e9224f11e736aa8d9
+      x-request-id: c98862e8b1b417313ca165994808358b
+      x-kagi-trace: c98862e8b1b417313ca165994808358b
       cache-control: no-store
       content-type: application/json
       content-encoding: gzip
-      content-length: '359'
+      content-length: '346'
       via: 1.1 google
-      date: Wed, 08 Apr 2026 12:16:43 GMT
+      date: Thu, 09 Apr 2026 07:20:57 GMT
       x-frame-options: SAMEORIGIN
       strict-transport-security: max-age=31536000; includeSubDomains; preload
       alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
     body:
-      string: '{"meta":{"id":"0e9dcc7cdde4f56e9224f11e736aa8d9","node":"europe-west4","ms":582,"api_balance":102.496337},"data":[{"t":0,"url":"https://developers.openalex.org/api-reference/introduction","title":"API
-        Overview - OpenAlex Developers","snippet":"The OpenAlex API provides access
-        to a comprehensive catalog of scholarly works, authors, sources, institutions,
-        topics, and more. New to OpenAlex? Start with ..."},{"t":1,"list":["openalex
-        api documentation","openalex api limit","openalex api python","openalex api
-        search"]}]}'
-  recorded_at: 2026-04-08 12:16:41
+      string: '{"meta":{"id":"c98862e8b1b417313ca165994808358b","node":"europe-west4","ms":1214,"api_balance":102.467337},"data":[{"t":0,"url":"https://developers.openalex.org/","title":"Overview
+        - OpenAlex Developers","snippet":"We offer a fast, modern REST API to get
+        OpenAlex data programmatically. It&#39;s free but requires an API key (also
+        free). Get yours at openalex.org/settings/api."},{"t":1,"list":["openalex
+        api documentation","openalex api limit","openalex api search","openalex api
+        python"]}]}'
+  recorded_at: 2026-04-09 07:20:55
 recorded_with: VCR-vcr/2.0.0

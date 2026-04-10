@@ -1,7 +1,7 @@
 # Summarize Examples
 
 ```r
-q_text <- summarize_query(
+q_text <- query_summarize(
   text = paste(
     "Biodiversity underpins ecosystem services.",
     "Habitat loss and climate pressure accelerate species decline."

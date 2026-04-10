@@ -1,4 +1,4 @@
-url: https://rkrug.github.io/rkagi/
+url: https://rkrug.github.io/kagiPro/
 destination: _site
 template:
   bootstrap: 5
@@ -6,6 +6,7 @@ articles:
   - title: Guides
     contents:
       - quickstart
+      - corpus-workflow
       - search-endpoint
       - enrich-endpoint
       - summarize-endpoint

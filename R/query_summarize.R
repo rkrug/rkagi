@@ -19,12 +19,12 @@
 #'   `"TR"`, `"UK"`, `"ZH"`, `"ZH-HANT"`. Default: `"EN"`.
 #' @param cache Logical. Whether to allow API-side caching.
 #'
-#' @return A named list of `kagi_summarize_query` objects to be passed to
+#' @return A named list of `kagi_query_summarize` objects to be passed to
 #'   [kagi_request()].
 #'
 #' @examples
 #' \dontrun{
-#' req <- summarize_query(text = "Lorem ipsum")
+#' req <- query_summarize(text = "Lorem ipsum")
 #' req
 #' }
 #'
@@ -33,7 +33,7 @@
 # -------- constructors -------------------------------------------------------
 
 #' @export
-summarize_query <- function(
+query_summarize <- function(
   url = NULL,
   text = NULL,
   engine = NULL,
@@ -134,7 +134,7 @@ summarize_query <- function(
     seq_len(nrow(args)),
     function(i) {
       res <- as.list(args[i, , drop = TRUE])
-      class(res) <- c("kagi_summarize_query", class(res))
+      class(res) <- c("kagi_query_summarize", class(res))
       return(res)
     }
   )
@@ -145,9 +145,9 @@ summarize_query <- function(
 }
 
 #' @export
-print.kagi_summarize_query <- function(x, ...) {
+print.kagi_query_summarize <- function(x, ...) {
   cat(
-    "<kagi_summarize_query>\n"
+    "<kagi_query_summarize>\n"
   )
   for (i in 1:length(x)) {
     paste0(
