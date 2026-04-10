@@ -1,3 +1,17 @@
+# kagiPro 0.4.1
+
+## Documentation
+
+- Externalized the generic `r-package-developer` skill from package content to
+  repository-level `skills/r-package-developer`.
+- Updated skill discovery guidance to clearly distinguish package-bundled skills
+  (`inst/skills`) from the external generic developer skill.
+- Added explicit policy text: if the external skill is missing, suggest
+  installation, but only install with explicit developer approval and never
+  automatically.
+- Removed the pkgdown wrapper page for the external developer skill and updated
+  pkgdown article/menu configuration accordingly.
+
 # kagiPro 0.4.0
 
 ## Features
