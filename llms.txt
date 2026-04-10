@@ -101,8 +101,20 @@ Endpoint guides are available at: -
 
 AI-agent skills (for Codex/Claude-style workflows) are packaged under: -
 `inst/skills/` - `inst/skills/README.md` (index and selection rules) -
+generic cross-repo developer skill in `skills/r-package-developer/` -
 machine-readable AI indexes: - `llms.txt` (compact) - `llms-full.txt`
 (extended contracts/workflows)
+
+If `r-package-developer` is missing, suggest installation to the
+developer. Install only with explicit developer approval; never
+automatically.
+
+If explicitly approved and `skills/r-package-developer` is missing,
+install it with:
+
+``` bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rkrug/r-package-developer-skill/main/skills/r-package-developer/scripts/sync-from-github.sh)"
+```
 
 The full reference and function documentation is published via
 **pkgdown** at:  
@@ -307,13 +319,6 @@ MIT © Rainer Krug
   Use this skill when changing content download, markdown extraction,
   abstract generation, summarizer providers, or corpus-read linking
   behavior.
-
-- [Skill: R Package
-  Maintainer](https://rkrug.github.io/kagiPro/articles/skills-r-package-maintainer.md):
-
-  Generic R package maintainer skill for implementation quality,
-  testing, docs sync, release hygiene, branch governance, and merge
-  safety.
 
 - [Skill: User
   Search](https://rkrug.github.io/kagiPro/articles/skills-user-search.md):

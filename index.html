@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,6 @@
     <li><a class="dropdown-item" href="articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
     <li><a class="dropdown-item" href="articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
     <li><a class="dropdown-item" href="articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
-    <li><a class="dropdown-item" href="articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-search.html">User Search</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-enrich.html">User Enrich</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-summarize.html">User Summarize</a></li>
@@ -153,7 +152,10 @@ Store your API key securely in your system keychain:</p>
 <p>A detailed <strong>Quickstart vignette</strong> is included and available at:<br>
 👉 <a href="https://rkrug.github.io/kagiPro/articles/quickstart.html" class="uri">https://rkrug.github.io/kagiPro/articles/quickstart.html</a></p>
 <p>Endpoint guides are available at: - <a href="https://rkrug.github.io/kagiPro/articles/search-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/search-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/corpus-workflow.html" class="uri">https://rkrug.github.io/kagiPro/articles/corpus-workflow.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/agent-quick-index.html" class="uri">https://rkrug.github.io/kagiPro/articles/agent-quick-index.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/api-contracts.html" class="uri">https://rkrug.github.io/kagiPro/articles/api-contracts.html</a></p>
-<p>AI-agent skills (for Codex/Claude-style workflows) are packaged under: - <code>inst/skills/</code> - <code>inst/skills/README.md</code> (index and selection rules) - machine-readable AI indexes: - <code>llms.txt</code> (compact) - <code>llms-full.txt</code> (extended contracts/workflows)</p>
+<p>AI-agent skills (for Codex/Claude-style workflows) are packaged under: - <code>inst/skills/</code> - <code>inst/skills/README.md</code> (index and selection rules) - generic cross-repo developer skill in <code>skills/r-package-developer/</code> - machine-readable AI indexes: - <code>llms.txt</code> (compact) - <code>llms-full.txt</code> (extended contracts/workflows)</p>
+<p>If <code>r-package-developer</code> is missing, suggest installation to the developer. Install only with explicit developer approval; never automatically.</p>
+<p>If explicitly approved and <code>skills/r-package-developer</code> is missing, install it with:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">/bin/bash</span> <span class="at">-c</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-fsSL</span> https://raw.githubusercontent.com/rkrug/r-package-developer-skill/main/skills/r-package-developer/scripts/sync-from-github.sh<span class="va">)</span><span class="st">"</span></span></code></pre></div>
 <p>The full reference and function documentation is published via <strong>pkgdown</strong> at:<br>
 👉 <a href="https://rkrug.github.io/kagiPro/" class="uri">https://rkrug.github.io/kagiPro/</a></p>
 <hr>
@@ -166,7 +168,7 @@ Store your API key securely in your system keychain:</p>
 <li><code>&lt;project_folder&gt;/&lt;endpoint&gt;/json</code></li>
 <li><code>&lt;project_folder&gt;/&lt;endpoint&gt;/parquet</code></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rkrug/kagiPro" class="external-link">kagiPro</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kagi_connection.html">kagi_connection</a></span><span class="op">(</span>api_key <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"API_kagi"</span><span class="op">)</span><span class="op">)</span></span>
@@ -178,14 +180,14 @@ Store your API key securely in your system keychain:</p>
 <span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>To rerun one stored query by name (and refresh only that parquet query partition), use <code><a href="reference/kagi_update_query.html">kagi_update_query()</a></code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/kagi_update_query.html">kagi_update_query</a></span><span class="op">(</span></span>
 <span>  connection <span class="op">=</span> <span class="va">conn</span>,</span>
 <span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span>,</span>
 <span>  query_name <span class="op">=</span> <span class="st">"query_1"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>To reclaim space from JSON request payloads while keeping rerun metadata, use:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/clean_request.html">clean_request</a></span><span class="op">(</span><span class="st">"kagi_project"</span>, dry_run <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># preview</span></span>
 <span><span class="fu"><a href="reference/clean_request.html">clean_request</a></span><span class="op">(</span><span class="st">"kagi_project"</span>, dry_run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># execute</span></span></code></pre></div>
 <hr>
@@ -194,7 +196,7 @@ Store your API key securely in your system keychain:</p>
 <h2 id="openalexpro-bridge">OpenAlexPro Bridge<a class="anchor" aria-label="anchor" href="#openalexpro-bridge"></a>
 </h2>
 <p>For abstract enrichment, use the modular pipeline: download content -&gt; extract markdown -&gt; summarize markdown.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Assumes `kagi_project/search/parquet` already exists</span></span>
 <span><span class="fu"><a href="reference/download_content.html">download_content</a></span><span class="op">(</span></span>
 <span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span>,</span>
@@ -277,6 +279,7 @@ Store your API key securely in your system keychain:</p>
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://doi.org/10.5281/zenodo.19497428" class="external-link"><img src="https://zenodo.org/badge/1045509334.svg" alt="DOI"></a></li>
 <li><a href="https://github.com/rkrug/kagiPro/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/rkrug/kagiPro/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>

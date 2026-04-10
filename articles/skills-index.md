@@ -6,6 +6,21 @@ This folder contains AI-agent skills for working with `kagiPro`.
 Preferred high-level project workflow:
 [`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md).
 
+### External Skill Notice
+
+`r-package-developer` is not bundled in this package/repo by default.
+
+If `r-package-developer` is missing, suggest installation to the
+developer. Install only after explicit developer approval. Never install
+it automatically.
+
+If explicitly approved and `skills/r-package-developer` is missing,
+install it with:
+
+``` bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rkrug/r-package-developer-skill/main/skills/r-package-developer/scripts/sync-from-github.sh)"
+```
+
 ### Skills
 
 - `maintainer-workflow` Use when updating package behavior, tests, docs,
@@ -17,9 +32,9 @@ Preferred high-level project workflow:
   summarizer providers, or abstract-link contracts.
 - `maintainer-release-sync` Use before release/merge to synchronize
   versioning, changelog, docs, vignettes, and skills.
-- `r-package-maintainer` Generic R-package maintainer baseline skill
-  (portable across repos) for workflow, validation, branch governance,
-  and commit standards.
+- `r-package-developer` (external path: `skills/r-package-developer`)
+  Generic R-package developer baseline skill (portable across repos) for
+  workflow, validation, branch governance, and commit standards.
 - `user-search` Use for Search endpoint workflows aligned with
   `vignettes/search-endpoint.qmd`.
 - `user-enrich` Use for Enrich endpoint workflows aligned with
@@ -42,7 +57,7 @@ Preferred high-level project workflow:
     API/docs are affected).
 4.  If the task is release-finalization, use `maintainer-release-sync`.
 5.  If the task is generic/package-governance work (not package-specific
-    internals), use `r-package-maintainer`.
+    internals), use `r-package-developer`.
 6.  If a task spans endpoint usage and package changes, load the
     relevant maintainer skill plus the matching `user-*` skill.
 

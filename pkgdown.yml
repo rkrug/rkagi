@@ -13,14 +13,13 @@ articles:
   skills-maintainer-corpus-pipeline: skills-maintainer-corpus-pipeline.html
   skills-maintainer-release-sync: skills-maintainer-release-sync.html
   skills-maintainer-workflow: skills-maintainer-workflow.html
-  skills-r-package-maintainer: skills-r-package-maintainer.html
   skills-user-corpus-workflow: skills-user-corpus-workflow.html
   skills-user-enrich: skills-user-enrich.html
   skills-user-fastgpt: skills-user-fastgpt.html
   skills-user-search: skills-user-search.html
   skills-user-summarize: skills-user-summarize.html
   summarize-endpoint: summarize-endpoint.html
-last_built: 2026-04-10T13:13Z
+last_built: 2026-04-10T14:31Z
 urls:
   reference: https://rkrug.github.io/kagiPro/reference
   article: https://rkrug.github.io/kagiPro/articles

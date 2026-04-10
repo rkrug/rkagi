@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,6 @@
     <li><a class="dropdown-item" href="../articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
     <li><a class="dropdown-item" href="../articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
     <li><a class="dropdown-item" href="../articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
-    <li><a class="dropdown-item" href="../articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-search.html">User Search</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-enrich.html">User Enrich</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-summarize.html">User Summarize</a></li>
@@ -67,7 +66,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/v0.4.0/vignettes/skills-index.qmd" class="external-link"><code>vignettes/skills-index.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/main/vignettes/skills-index.qmd" class="external-link"><code>vignettes/skills-index.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -79,7 +78,13 @@
     <section class="section level2"><h2 id="kagipro-skills-index">kagiPro Skills Index<a class="anchor" aria-label="anchor" href="#kagipro-skills-index"></a>
 </h2>
 <p>This folder contains AI-agent skills for working with <code>kagiPro</code>. Preferred high-level project workflow: <code><a href="../reference/kagi_fetch.html">kagi_fetch()</a></code>.</p>
-<section class="level2"><h3 id="skills">Skills<a class="anchor" aria-label="anchor" href="#skills"></a>
+<section class="level2"><h3 id="external-skill-notice">External Skill Notice<a class="anchor" aria-label="anchor" href="#external-skill-notice"></a>
+</h3>
+<p><code>r-package-developer</code> is not bundled in this package/repo by default.</p>
+<p>If <code>r-package-developer</code> is missing, suggest installation to the developer. Install only after explicit developer approval. Never install it automatically.</p>
+<p>If explicitly approved and <code>skills/r-package-developer</code> is missing, install it with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/bin/bash</span> <span class="at">-c</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-fsSL</span> https://raw.githubusercontent.com/rkrug/r-package-developer-skill/main/skills/r-package-developer/scripts/sync-from-github.sh<span class="va">)</span><span class="st">"</span></span></code></pre></div>
+</section><section class="level2"><h3 id="skills">Skills<a class="anchor" aria-label="anchor" href="#skills"></a>
 </h3>
 <ul>
 <li>
@@ -89,7 +94,7 @@
 <li>
 <code>maintainer-release-sync</code> Use before release/merge to synchronize versioning, changelog, docs, vignettes, and skills.</li>
 <li>
-<code>r-package-maintainer</code> Generic R-package maintainer baseline skill (portable across repos) for workflow, validation, branch governance, and commit standards.</li>
+<code>r-package-developer</code> (external path: <code>skills/r-package-developer</code>) Generic R-package developer baseline skill (portable across repos) for workflow, validation, branch governance, and commit standards.</li>
 <li>
 <code>user-search</code> Use for Search endpoint workflows aligned with <code>vignettes/search-endpoint.qmd</code>.</li>
 <li>
@@ -107,7 +112,7 @@
 <li>If the task changes package internals, tests, release docs, or conventions, use <code>maintainer-workflow</code>.</li>
 <li>If the task changes corpus pipeline internals, use <code>maintainer-corpus-pipeline</code> (and <code>maintainer-workflow</code> when broader API/docs are affected).</li>
 <li>If the task is release-finalization, use <code>maintainer-release-sync</code>.</li>
-<li>If the task is generic/package-governance work (not package-specific internals), use <code>r-package-maintainer</code>.</li>
+<li>If the task is generic/package-governance work (not package-specific internals), use <code>r-package-developer</code>.</li>
 <li>If a task spans endpoint usage and package changes, load the relevant maintainer skill plus the matching <code>user-*</code> skill.</li>
 </ol></section><section class="level2"><h3 id="non-goal">Non-goal<a class="anchor" aria-label="anchor" href="#non-goal"></a>
 </h3>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,6 @@
     <li><a class="dropdown-item" href="../articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
     <li><a class="dropdown-item" href="../articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
     <li><a class="dropdown-item" href="../articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
-    <li><a class="dropdown-item" href="../articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-search.html">User Search</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-enrich.html">User Enrich</a></li>
     <li><a class="dropdown-item" href="../articles/skills-user-summarize.html">User Summarize</a></li>
@@ -42,9 +41,19 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/rkrug/kagiPro/blob/v0.4.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/rkrug/kagiPro/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.1" id="kagipro-041">kagiPro 0.4.1<a class="anchor" aria-label="anchor" href="#kagipro-041"></a></h2>
+<div class="section level3">
+<h3 id="documentation-0-4-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-4-1"></a></h3>
+<ul><li>Externalized the generic <code>r-package-developer</code> skill from package content to repository-level <code>skills/r-package-developer</code>.</li>
+<li>Updated skill discovery guidance to clearly distinguish package-bundled skills (<code>inst/skills</code>) from the external generic developer skill.</li>
+<li>Added explicit policy text: if the external skill is missing, suggest installation, but only install with explicit developer approval and never automatically.</li>
+<li>Removed the pkgdown wrapper page for the external developer skill and updated pkgdown article/menu configuration accordingly.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="kagipro-040">kagiPro 0.4.0<a class="anchor" aria-label="anchor" href="#kagipro-040"></a></h2>
 <div class="section level3">
@@ -141,7 +150,7 @@
 <ul><li>Added CI workflow for package checks on pull requests to <code>main</code> and pushes to <code>dev</code>.</li>
 <li>Removed unused legacy package assets from <code>inst/</code> (<code>extdata</code>, <code>plantuml</code>, <code>query_test.R</code>).</li>
 <li>Added AI-doc consistency check script (<code>scripts/check-ai-docs.sh</code>) and wired it into CI (<code>R-CMD-check</code>).</li>
-<li>Added generic reusable maintainer skill <code>r-package-maintainer</code> with:
+<li>Added generic reusable maintainer skill <code>r-package-developer</code> with:
 <ul><li>branch protection baseline,</li>
 <li>release/validation checklist,</li>
 <li>commit template,</li>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,6 @@
     <li><a class="dropdown-item" href="articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
     <li><a class="dropdown-item" href="articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
     <li><a class="dropdown-item" href="articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
-    <li><a class="dropdown-item" href="articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-search.html">User Search</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-enrich.html">User Enrich</a></li>
     <li><a class="dropdown-item" href="articles/skills-user-summarize.html">User Summarize</a></li>
@@ -42,7 +41,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>kagiPro Design Philosophy and Project Context (for AI Coding Agents)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/v0.4.0/PROJECT_DESIGN.md" class="external-link"><code>PROJECT_DESIGN.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/main/PROJECT_DESIGN.md" class="external-link"><code>PROJECT_DESIGN.md</code></a></small>
     </div>
 
 <div id="kagipro-design-philosophy-and-project-context-for-ai-coding-agents" class="section level1">
@@ -145,7 +144,7 @@
 <li>
 <code>maintainer-release-sync</code> covers pre-release consistency checks across code, docs, vignettes, skills, and changelog.</li>
 <li>
-<code>r-package-maintainer</code> provides a generic, reusable R-package governance baseline (workflow, branch policy, validation, commit standard, and skill design rules).</li>
+<code>r-package-developer</code> provides a generic, reusable R-package governance baseline (workflow, branch policy, validation, commit standard, and skill design rules).</li>
 <li>Endpoint user skills (<code>user-search</code>, <code>user-enrich</code>, <code>user-summarize</code>, <code>user-fastgpt</code>) mirror the endpoint vignettes.</li>
 <li>
 <code>user-corpus-workflow</code> mirrors the end-to-end corpus vignette (<code>vignettes/corpus-workflow.qmd</code>).</li>
@@ -158,12 +157,13 @@
 <li>End-to-end corpus build (<code>parquet</code> -&gt; <code>content</code> -&gt; <code>markdown</code> -&gt; <code>abstract</code>): use <code>user-corpus-workflow</code>.</li>
 <li>Internal pipeline changes (download/extraction/summarization/linking): use <code>maintainer-corpus-pipeline</code>.</li>
 <li>Cross-cutting package changes (API behavior, tests, docs contracts): use <code>maintainer-workflow</code>.</li>
-<li>Generic package-maintenance governance workflows (portable pattern): use <code>r-package-maintainer</code>.</li>
+<li>Generic package-maintenance governance workflows (portable pattern): use <code>r-package-developer</code>.</li>
 <li>Pre-release / merge final synchronization: use <code>maintainer-release-sync</code>.</li>
 </ol></div>
 <div class="section level2">
 <h2 id="skills-in-pkgdown">Skills in pkgdown<a class="anchor" aria-label="anchor" href="#skills-in-pkgdown"></a></h2>
-<p>Skills are rendered in pkgdown via include-based wrapper vignettes (<code>vignettes/skills-*.qmd</code>) so skill text remains single-source in <code>inst/skills</code>.</p>
+<p>Skills are rendered in pkgdown via include-based wrapper vignettes (<code>vignettes/skills-*.qmd</code>) so skill text remains single-source in <code>inst/skills</code> for package-bundled skills.</p>
+<p>The generic cross-repo developer skill (<code>r-package-developer</code>) is maintained externally at <code>skills/r-package-developer</code> and is not packaged as part of the R package contents.</p>
 <p>Contract:</p>
 <ul><li>one wrapper page per skill,</li>
 <li>references embedded within the same skill page,</li>
@@ -171,7 +171,7 @@
 <li>no duplicated copied skill/reference text in vignettes.</li>
 </ul></div>
 <div class="section level2">
-<h2 id="recent-change-summary-toward-040">Recent Change Summary (toward 0.4.0)<a class="anchor" aria-label="anchor" href="#recent-change-summary-toward-040"></a></h2>
+<h2 id="recent-change-summary-toward-041">Recent Change Summary (toward 0.4.1)<a class="anchor" aria-label="anchor" href="#recent-change-summary-toward-041"></a></h2>
 <p>Key project-level changes reflected in this cycle:</p>
 <ul><li>Standardized query constructor behavior to named lists.</li>
 <li>Renamed endpoint constructors to <code>query_&lt;endpoint&gt;</code>:
@@ -195,6 +195,7 @@
 <li>Added pluggable content summarizers: <code><a href="reference/summarize_with_openai.html">summarize_with_openai()</a></code> and <code><a href="reference/summarize_with_kagi.html">summarize_with_kagi()</a></code>.</li>
 <li>Added <code><a href="reference/read_corpus.html">read_corpus()</a></code> with optional abstract linking (<code>abstracts = TRUE</code>) on <code>id + query</code>.</li>
 <li>Added AI-agent skills under <code>inst/skills</code> for maintainer and endpoint-specific workflows.</li>
+<li>Externalized <code>r-package-developer</code> from <code>inst/skills</code> to <code>skills/r-package-developer</code> as a repository-level generic skill.</li>
 <li>Added standard disclaimer and AI-assisted development notice to README.</li>
 <li>Removed unused legacy assets from <code>inst/</code> (old extdata, plantuml diagrams, query_test script).</li>
 </ul></div>

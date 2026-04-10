@@ -45,13 +45,6 @@
   abstract generation, summarizer providers, or corpus-read linking
   behavior.
 
-- [Skill: R Package
-  Maintainer](https://rkrug.github.io/kagiPro/articles/skills-r-package-maintainer.md):
-
-  Generic R package maintainer skill for implementation quality,
-  testing, docs sync, release hygiene, branch governance, and merge
-  safety.
-
 - [Skill: User
   Search](https://rkrug.github.io/kagiPro/articles/skills-user-search.md):
 
