@@ -1,4 +1,4 @@
-# rkagi FastGPT Endpoint Guide
+# kagiPro FastGPT Endpoint Guide
 
 ## FastGPT Endpoint: Practical Prompt Workflows
 
@@ -12,7 +12,7 @@ full job.
 ### Create one connection for all runs
 
 ``` r
-library(rkagi)
+library(kagiPro)
 
 conn <- kagi_connection(
   api_key = function() keyring::key_get("API_kagi")
@@ -22,7 +22,7 @@ conn <- kagi_connection(
 ### Build a single prompt query
 
 ``` r
-q_fast <- fastgpt_query(
+q_fast <- query_fastgpt(
   query = "What is Python 3.11?",
   cache = TRUE,
   web_search = TRUE
@@ -31,7 +31,7 @@ q_fast <- fastgpt_query(
 q_fast
 ```
 
-Like other query builders in `rkagi`, this returns a named list for
+Like other query builders in `kagiPro`, this returns a named list for
 consistency.
 
 ### Execute and store the first response
@@ -54,7 +54,7 @@ reproducibility.
 ### Scale prompts to a batch job
 
 ``` r
-q_fast_many <- fastgpt_query(
+q_fast_many <- query_fastgpt(
   query = c(
     "What are ecosystem services?",
     "What is biodiversity offsetting?",

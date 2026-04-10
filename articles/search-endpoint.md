@@ -1,9 +1,9 @@
-# rkagi Search Endpoint Guide
+# kagiPro Search Endpoint Guide
 
 ## Search Endpoint: From Question to Reusable Search Pipeline
 
 The Search endpoint is usually the first place where users build
-production workflows with `rkagi`.
+production workflows with `kagiPro`.
 
 This guide follows one realistic path: starting from a single question,
 refining the query syntax, scaling to batches, and choosing an error
@@ -12,7 +12,7 @@ strategy that matches your use case.
 ### Start with a reusable connection
 
 ``` r
-library(rkagi)
+library(kagiPro)
 
 conn <- kagi_connection(
   api_key = function() keyring::key_get("API_kagi")
@@ -29,7 +29,7 @@ want PDFs and DOCX files, hosted on specific sites, with year hints in
 the URL.
 
 ``` r
-q <- search_query(
+q <- query_search(
   query = 'biodiversity "annual report"',
   filetype = c("pdf", "docx"),
   site = c("example.com", "gov"),
@@ -74,7 +74,7 @@ If you monitor multiple themes and sources, use `expand = TRUE` to
 generate combinations.
 
 ``` r
-q_many <- search_query(
+q_many <- query_search(
   query = c("biodiversity indicators", "ecosystem services"),
   site = c("ipbes.net", "cbd.int"),
   filetype = c("pdf", "docx"),

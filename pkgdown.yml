@@ -2,12 +2,13 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
+  corpus-workflow: corpus-workflow.html
   enrich-endpoint: enrich-endpoint.html
   fastgpt-endpoint: fastgpt-endpoint.html
   quickstart: quickstart.html
   search-endpoint: search-endpoint.html
   summarize-endpoint: summarize-endpoint.html
-last_built: 2026-04-08T14:49Z
+last_built: 2026-04-10T06:35Z
 urls:
-  reference: https://rkrug.github.io/rkagi/reference
-  article: https://rkrug.github.io/rkagi/articles
+  reference: https://rkrug.github.io/kagiPro/reference
+  article: https://rkrug.github.io/kagiPro/articles

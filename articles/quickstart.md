@@ -1,8 +1,8 @@
-# rkagi Quickstart Guide
+# kagiPro Quickstart Guide
 
-## rkagi: First End-to-End Workflow
+## kagiPro: First End-to-End Workflow
 
-This quickstart is a complete first run with `rkagi`: install the
+This quickstart is a complete first run with `kagiPro`: install the
 package, create a secure connection, build queries, execute requests,
 and store responses in a format ready for analysis.
 
@@ -10,26 +10,51 @@ The package is intentionally structured around a stable pattern:
 
 1.  Create query objects with endpoint-specific constructors.
 2.  Reuse a single
-    [`kagi_connection()`](https://rkrug.github.io/rkagi/reference/kagi_connection.md)
+    [`kagi_connection()`](https://rkrug.github.io/kagiPro/reference/kagi_connection.md)
     object.
-3.  Execute with
-    [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
-    and persist JSON responses.
-4.  Optionally convert JSON output to parquet tables.
+3.  Either use
+    [`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md)
+    for project-folder workflows, or use
+    [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md) +
+    [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md)
+    directly.
+4.  Keep JSON as the request audit trail, and parquet as analysis-ready
+    output.
 
 Once this pattern is familiar, every endpoint follows the same
 operational logic.
 
+### Project-folder first workflow
+
+For endpoint-scoped project outputs (aligned with `openalexPro`
+conventions), use
+[`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md):
+
+``` r
+q_project <- query_search("biodiversity policy", expand = FALSE)
+
+kagi_fetch(
+  connection = conn,
+  query = q_project,
+  project_folder = "kagi_project"
+)
+```
+
+This writes to:
+
+- `kagi_project/search/json`
+- `kagi_project/search/parquet`
+
 ### Install and load the package
 
-If `rkagi` is not installed yet, install it from GitHub and load it:
+If `kagiPro` is not installed yet, install it from GitHub and load it:
 
 ``` r
 if (requireNamespace("remotes", quietly = FALSE)) {
   install.packages("remotes")
 }
-remotes::install_github("rkrug/rkagi")
-library(rkagi)
+remotes::install_github("rkrug/kagiPro")
+library(kagiPro)
 ```
 
 ### Create a secure API connection
@@ -57,7 +82,7 @@ Search is a good first endpoint because it shows how query constructors
 work:
 
 ``` r
-q <- search_query(
+q <- query_search(
   query = 'biodiversity "annual report"',
   filetype = c("pdf", "docx"),
   site = c("example.com", "gov"),
@@ -67,7 +92,7 @@ q <- search_query(
 )
 ```
 
-[`search_query()`](https://rkrug.github.io/rkagi/reference/search_query.md)
+[`query_search()`](https://rkrug.github.io/kagiPro/reference/query_search.md)
 returns a named list, even for a single input. That consistency makes it
 easy to scale the same code from one query to many.
 
@@ -82,7 +107,7 @@ open_search_query(q[[1]])
 Create an output folder and run the request:
 
 ``` r
-out_search <- tempfile("rkagi-search-")
+out_search <- tempfile("kagiPro-search-")
 dir.create(out_search, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -107,9 +132,9 @@ Only the query constructor changes.
 #### Enrich web
 
 ``` r
-q_web <- enrich_web_query("open data portals", site = "gov", expand = FALSE)
+q_web <- query_enrich_web("open data portals", site = "gov", expand = FALSE)
 
-out_web <- tempfile("rkagi-enrich-web-")
+out_web <- tempfile("kagiPro-enrich-web-")
 dir.create(out_web, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -123,9 +148,9 @@ kagi_request(
 #### Enrich news
 
 ``` r
-q_news <- enrich_news_query("biodiversity policy", expand = FALSE)
+q_news <- query_enrich_news("biodiversity policy", expand = FALSE)
 
-out_news <- tempfile("rkagi-enrich-news-")
+out_news <- tempfile("kagiPro-enrich-news-")
 dir.create(out_news, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -139,7 +164,7 @@ kagi_request(
 #### Summarize (text input)
 
 ``` r
-q_sum_text <- summarize_query(
+q_sum_text <- query_summarize(
   text = paste(
     "Biodiversity underpins ecosystem services including pollination,",
     "soil fertility, water purification, and climate regulation.",
@@ -151,7 +176,7 @@ q_sum_text <- summarize_query(
   cache = TRUE
 )
 
-out_sum <- tempfile("rkagi-summarize-")
+out_sum <- tempfile("kagiPro-summarize-")
 dir.create(out_sum, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -165,13 +190,13 @@ kagi_request(
 #### FastGPT
 
 ``` r
-q_fast <- fastgpt_query(
+q_fast <- query_fastgpt(
   query = "What are ecosystem services?",
   cache = TRUE,
   web_search = TRUE
 )
 
-out_fast <- tempfile("rkagi-fastgpt-")
+out_fast <- tempfile("kagiPro-fastgpt-")
 dir.create(out_fast, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -188,7 +213,7 @@ When you move from inspection to analysis pipelines, parquet is usually
 more convenient:
 
 ``` r
-parquet_dir <- tempfile("rkagi-parquet-")
+parquet_dir <- tempfile("kagiPro-parquet-")
 
 kagi_request_parquet(
   input_json = out_search,
@@ -197,15 +222,46 @@ kagi_request_parquet(
 )
 ```
 
+### Bridge to OpenAlex-style vector input
+
+If you want to pass results into `openalexPro`/`openalexVectorComp`
+workflows, use the modular content pipeline: download content -\>
+extract markdown -\> summarize markdown.
+
+``` r
+download_content(
+  project_folder = "kagi_project",
+  endpoint = "search"
+)
+
+content_markdown(
+  project_folder = "kagi_project",
+  endpoint = "search"
+)
+
+markdown_abstract(
+  project_folder = "kagi_project",
+  endpoint = "search",
+  summarizer_fn = summarize_with_openai,
+  model = "gpt-4.1-mini"
+)
+
+# abstract parquet output is written under:
+# kagi_project/search/abstract/query=<query_name>/
+```
+
+`id` is a deterministic hash of normalized URL.
+
 ### Where to go next
 
 For deeper endpoint-specific workflows (batching patterns, robust error
 handling, and endpoint-focused examples), continue with:
 
-- [`vignette("search-endpoint", package = "rkagi")`](https://rkrug.github.io/rkagi/articles/search-endpoint.md)
-- [`vignette("enrich-endpoint", package = "rkagi")`](https://rkrug.github.io/rkagi/articles/enrich-endpoint.md)
-- [`vignette("summarize-endpoint", package = "rkagi")`](https://rkrug.github.io/rkagi/articles/summarize-endpoint.md)
-- [`vignette("fastgpt-endpoint", package = "rkagi")`](https://rkrug.github.io/rkagi/articles/fastgpt-endpoint.md)
+- [`vignette("search-endpoint", package = "kagiPro")`](https://rkrug.github.io/kagiPro/articles/search-endpoint.md)
+- [`vignette("enrich-endpoint", package = "kagiPro")`](https://rkrug.github.io/kagiPro/articles/enrich-endpoint.md)
+- [`vignette("summarize-endpoint", package = "kagiPro")`](https://rkrug.github.io/kagiPro/articles/summarize-endpoint.md)
+- [`vignette("fastgpt-endpoint", package = "kagiPro")`](https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.md)
+- [`vignette("corpus-workflow", package = "kagiPro")`](https://rkrug.github.io/kagiPro/articles/corpus-workflow.md)
 
 ### Session info
 

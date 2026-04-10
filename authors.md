@@ -6,13 +6,16 @@
 
 ## Citation
 
-Krug R (2026). *rkagi: Kagi API Client for R*. R package version 0.3.0,
-<https://rkrug.github.io/rkagi/>.
+Source:
+[`DESCRIPTION`](https://github.com/rkrug/kagiPro/blob/main/DESCRIPTION)
+
+Krug R (2026). *kagiPro: Kagi API Client for R*. R package version
+0.4.0, <https://github.com/rkrug/kagiPro>.
 
     @Manual{,
-      title = {rkagi: Kagi API Client for R},
+      title = {kagiPro: Kagi API Client for R},
       author = {Rainer M. Krug},
       year = {2026},
-      note = {R package version 0.3.0},
-      url = {https://rkrug.github.io/rkagi/},
+      note = {R package version 0.4.0},
+      url = {https://github.com/rkrug/kagiPro},
     }

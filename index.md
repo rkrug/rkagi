@@ -1,4 +1,4 @@
-# rkagi [![](https://rkrug.github.io/rkagi/logo.png)](https://rkrug.github.io/rkagi/)
+# kagiPro [![](https://rkrug.github.io/kagiPro/logo.png)](https://rkrug.github.io/kagiPro/)
 
 > R client for the [Kagi API](https://help.kagi.com/kagi/api/).
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-`rkagi` provides a lightweight R interface to the **Kagi API**,
+`kagiPro` provides a lightweight R interface to the **Kagi API**,
 including:
 
 - **Search API** — perform web searches with advanced operators
@@ -21,6 +21,7 @@ clients:
 - Extractor helpers to work with results as tibbles or text
 - Secure API key handling with
   [keyring](https://cran.r-project.org/package=keyring)
+- Replay metadata for query-by-name reruns in project workflows
 
 ------------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ clients:
 ``` r
 # Install the development version from GitHub
 # install.packages("remotes")
-remotes::install_github("rkrug/rkagi")
+remotes::install_github("rkrug/kagiPro")
 ```
 
 ------------------------------------------------------------------------
@@ -58,10 +59,10 @@ conn <- kagi_connection(
 ## Example
 
 ``` r
-library(rkagi)
+library(kagiPro)
 
 # Build a query
-q <- search_query(
+q <- query_search(
   query    = 'biodiversity "annual report"',
   filetype = "pdf",
   site     = "example.com",
@@ -70,7 +71,7 @@ q <- search_query(
 
 # Execute request and write JSON output
 conn <- kagi_connection(api_key = function() keyring::key_get("API_kagi"))
-out <- tempfile("rkagi-search-")
+out <- tempfile("kagiPro-search-")
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -87,27 +88,102 @@ kagi_request(
 ## Documentation
 
 A detailed **Quickstart vignette** is included and available at:  
-👉 <https://rkrug.github.io/rkagi/articles/quickstart.html>
+👉 <https://rkrug.github.io/kagiPro/articles/quickstart.html>
 
 Endpoint guides are available at: -
-<https://rkrug.github.io/rkagi/articles/search-endpoint.html> -
-<https://rkrug.github.io/rkagi/articles/enrich-endpoint.html> -
-<https://rkrug.github.io/rkagi/articles/summarize-endpoint.html> -
-<https://rkrug.github.io/rkagi/articles/fastgpt-endpoint.html>
+<https://rkrug.github.io/kagiPro/articles/search-endpoint.html> -
+<https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html> -
+<https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html> -
+<https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html> -
+<https://rkrug.github.io/kagiPro/articles/corpus-workflow.html>
 
 AI-agent skills (for Codex/Claude-style workflows) are packaged under: -
 `inst/skills/` - `inst/skills/README.md` (index and selection rules)
 
 The full reference and function documentation is published via
 **pkgdown** at:  
-👉 <https://rkrug.github.io/rkagi/>
+👉 <https://rkrug.github.io/kagiPro/>
+
+------------------------------------------------------------------------
+
+## Project-Folder Workflow (`kagi_fetch`)
+
+For project-oriented runs aligned with `openalexPro`, use
+[`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md)
+as the high-level entrypoint. It writes endpoint-scoped folders:
+
+- `<project_folder>/<endpoint>/json`
+- `<project_folder>/<endpoint>/parquet`
+
+``` r
+library(kagiPro)
+
+conn <- kagi_connection(api_key = function() keyring::key_get("API_kagi"))
+q <- query_search("biodiversity policy", expand = FALSE)
+
+parquet_path <- kagi_fetch(
+  connection = conn,
+  query = q,
+  project_folder = "kagi_project"
+)
+```
+
+To rerun one stored query by name (and refresh only that parquet query
+partition), use
+[`kagi_update_query()`](https://rkrug.github.io/kagiPro/reference/kagi_update_query.md):
+
+``` r
+kagi_update_query(
+  connection = conn,
+  project_folder = "kagi_project",
+  query_name = "query_1"
+)
+```
+
+To reclaim space from JSON request payloads while keeping rerun
+metadata, use:
+
+``` r
+clean_request("kagi_project", dry_run = TRUE)   # preview
+clean_request("kagi_project", dry_run = FALSE)  # execute
+```
+
+------------------------------------------------------------------------
+
+## OpenAlexPro Bridge
+
+For abstract enrichment, use the modular pipeline: download content -\>
+extract markdown -\> summarize markdown.
+
+``` r
+# Assumes `kagi_project/search/parquet` already exists
+download_content(
+  project_folder = "kagi_project",
+  endpoint = "search"
+)
+
+content_markdown(
+  project_folder = "kagi_project",
+  endpoint = "search"
+)
+
+markdown_abstract(
+  project_folder = "kagi_project",
+  endpoint = "search",
+  summarizer_fn = summarize_with_openai,
+  model = "gpt-4.1-mini"
+)
+
+# Abstract parquet is written under:
+# kagi_project/search/abstract/query=<query_name>/
+```
 
 ------------------------------------------------------------------------
 
 ## Contributing
 
 Bug reports and pull requests are welcome at:  
-<https://github.com/rkrug/rkagi>
+<https://github.com/rkrug/kagiPro>
 
 ------------------------------------------------------------------------
 

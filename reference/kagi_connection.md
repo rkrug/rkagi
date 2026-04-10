@@ -27,7 +27,7 @@ kagi_connection(
   environment variable `KAGI_API_KEY`. Best practice is to set this
   variable in your `~/.Renviron`. Advanced users may also supply a
   function that resolves the key lazily at request time (see
-  [`resolve_api_key()`](https://rkrug.github.io/rkagi/reference/resolve_api_key.md)).
+  [`resolve_api_key()`](https://rkrug.github.io/kagiPro/reference/resolve_api_key.md)).
 
 - max_tries:
 
@@ -52,7 +52,7 @@ An object of class **`kagi_connection`** with components:
 
 ## See also
 
-[`resolve_api_key()`](https://rkrug.github.io/rkagi/reference/resolve_api_key.md),
+[`resolve_api_key()`](https://rkrug.github.io/kagiPro/reference/resolve_api_key.md),
 
 ## Examples
 

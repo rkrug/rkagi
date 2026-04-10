@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>rkagi Search Endpoint Guide • rkagi</title>
+<title>kagiPro Search Endpoint Guide • kagiPro</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="search-endpoint_files/libs/quarto-html/popper.min.js"></script><script src="search-endpoint_files/libs/quarto-html/tippy.umd.min.js"></script><link href="search-endpoint_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="search-endpoint_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="rkagi Search Endpoint Guide">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="kagiPro Search Endpoint Guide">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,9 +20,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">rkagi</a>
+    <a class="navbar-brand me-2" href="../index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -48,12 +49,12 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>rkagi Search Endpoint Guide</h1>
+      <h1>kagiPro Search Endpoint Guide</h1>
 
       <p class="author">Rainer Krug</p>
 
 
-
+      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/main/vignettes/search-endpoint.qmd" class="external-link"><code>vignettes/search-endpoint.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -64,12 +65,12 @@
 
     <section class="section level2"><h2 id="search-endpoint-from-question-to-reusable-search-pipeline">Search Endpoint: From Question to Reusable Search Pipeline<a class="anchor" aria-label="anchor" href="#search-endpoint-from-question-to-reusable-search-pipeline"></a>
 </h2>
-<p>The Search endpoint is usually the first place where users build production workflows with <code>rkagi</code>.</p>
+<p>The Search endpoint is usually the first place where users build production workflows with <code>kagiPro</code>.</p>
 <p>This guide follows one realistic path: starting from a single question, refining the query syntax, scaling to batches, and choosing an error strategy that matches your use case.</p>
 <section class="level2"><h3 id="start-with-a-reusable-connection">Start with a reusable connection<a class="anchor" aria-label="anchor" href="#start-with-a-reusable-connection"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rkrug.github.io/rkagi/">rkagi</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rkrug/kagiPro" class="external-link">kagiPro</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kagi_connection.html">kagi_connection</a></span><span class="op">(</span></span>
 <span>  api_key <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"API_kagi"</span><span class="op">)</span></span>
@@ -79,7 +80,7 @@
 </h3>
 <p>Suppose you are collecting policy reports related to biodiversity. You want PDFs and DOCX files, hosted on specific sites, with year hints in the URL.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/search_query.html">search_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_search.html">query_search</a></span><span class="op">(</span></span>
 <span>  query <span class="op">=</span> <span class="st">'biodiversity "annual report"'</span>,</span>
 <span>  filetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pdf"</span>, <span class="st">"docx"</span><span class="op">)</span>,</span>
 <span>  site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"example.com"</span>, <span class="st">"gov"</span><span class="op">)</span>,</span>
@@ -111,7 +112,7 @@
 </h3>
 <p>If you monitor multiple themes and sources, use <code>expand = TRUE</code> to generate combinations.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_many</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/search_query.html">search_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q_many</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_search.html">query_search</a></span><span class="op">(</span></span>
 <span>  query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"biodiversity indicators"</span>, <span class="st">"ecosystem services"</span><span class="op">)</span>,</span>
 <span>  site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ipbes.net"</span>, <span class="st">"cbd.int"</span><span class="op">)</span>,</span>
 <span>  filetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pdf"</span>, <span class="st">"docx"</span><span class="op">)</span>,</span>

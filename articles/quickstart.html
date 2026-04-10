@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>rkagi Quickstart Guide • rkagi</title>
+<title>kagiPro Quickstart Guide • kagiPro</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="quickstart_files/libs/quarto-html/popper.min.js"></script><script src="quickstart_files/libs/quarto-html/tippy.umd.min.js"></script><link href="quickstart_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="quickstart_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="rkagi Quickstart Guide">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="kagiPro Quickstart Guide">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,9 +20,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">rkagi</a>
+    <a class="navbar-brand me-2" href="../index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -48,12 +49,12 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>rkagi Quickstart Guide</h1>
+      <h1>kagiPro Quickstart Guide</h1>
 
       <p class="author">Rainer Krug</p>
 
 
-
+      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/main/vignettes/quickstart.qmd" class="external-link"><code>vignettes/quickstart.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -62,33 +63,48 @@
 
 
 
-    <section class="section level2"><h2 id="rkagi-first-end-to-end-workflow">rkagi: First End-to-End Workflow<a class="anchor" aria-label="anchor" href="#rkagi-first-end-to-end-workflow"></a>
+    <section class="section level2"><h2 id="kagipro-first-end-to-end-workflow">kagiPro: First End-to-End Workflow<a class="anchor" aria-label="anchor" href="#kagipro-first-end-to-end-workflow"></a>
 </h2>
-<p>This quickstart is a complete first run with <code>rkagi</code>: install the package, create a secure connection, build queries, execute requests, and store responses in a format ready for analysis.</p>
+<p>This quickstart is a complete first run with <code>kagiPro</code>: install the package, create a secure connection, build queries, execute requests, and store responses in a format ready for analysis.</p>
 <p>The package is intentionally structured around a stable pattern:</p>
 <ol type="1">
 <li>Create query objects with endpoint-specific constructors.</li>
 <li>Reuse a single <code><a href="../reference/kagi_connection.html">kagi_connection()</a></code> object.</li>
-<li>Execute with <code><a href="../reference/kagi_request.html">kagi_request()</a></code> and persist JSON responses.</li>
-<li>Optionally convert JSON output to parquet tables.</li>
+<li>Either use <code><a href="../reference/kagi_fetch.html">kagi_fetch()</a></code> for project-folder workflows, or use <code><a href="../reference/kagi_request.html">kagi_request()</a></code> + <code><a href="../reference/kagi_request_parquet.html">kagi_request_parquet()</a></code> directly.</li>
+<li>Keep JSON as the request audit trail, and parquet as analysis-ready output.</li>
 </ol>
 <p>Once this pattern is familiar, every endpoint follows the same operational logic.</p>
-<section class="level2"><h3 id="install-and-load-the-package">Install and load the package<a class="anchor" aria-label="anchor" href="#install-and-load-the-package"></a>
+<section class="level2"><h3 id="project-folder-first-workflow">Project-folder first workflow<a class="anchor" aria-label="anchor" href="#project-folder-first-workflow"></a>
 </h3>
-<p>If <code>rkagi</code> is not installed yet, install it from GitHub and load it:</p>
+<p>For endpoint-scoped project outputs (aligned with <code>openalexPro</code> conventions), use <code><a href="../reference/kagi_fetch.html">kagi_fetch()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q_project</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_search.html">query_search</a></span><span class="op">(</span><span class="st">"biodiversity policy"</span>, expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/kagi_fetch.html">kagi_fetch</a></span><span class="op">(</span></span>
+<span>  connection <span class="op">=</span> <span class="va">conn</span>,</span>
+<span>  query <span class="op">=</span> <span class="va">q_project</span>,</span>
+<span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>This writes to:</p>
+<ul>
+<li><code>kagi_project/search/json</code></li>
+<li><code>kagi_project/search/parquet</code></li>
+</ul></section><section class="level2"><h3 id="install-and-load-the-package">Install and load the package<a class="anchor" aria-label="anchor" href="#install-and-load-the-package"></a>
+</h3>
+<p>If <code>kagiPro</code> is not installed yet, install it from GitHub and load it:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rkrug/rkagi"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rkrug.github.io/rkagi/">rkagi</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rkrug/kagiPro"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rkrug/kagiPro" class="external-link">kagiPro</a></span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="create-a-secure-api-connection">Create a secure API connection<a class="anchor" aria-label="anchor" href="#create-a-secure-api-connection"></a>
 </h3>
 <p>Store your API key in your local keyring once:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"API_kagi"</span><span class="op">)</span></span></code></pre></div>
 <p>Then create a reusable connection object:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kagi_connection.html">kagi_connection</a></span><span class="op">(</span></span>
 <span>  api_key <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"API_kagi"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -96,8 +112,8 @@
 </section><section class="level2"><h3 id="build-your-first-search-query">Build your first search query<a class="anchor" aria-label="anchor" href="#build-your-first-search-query"></a>
 </h3>
 <p>Search is a good first endpoint because it shows how query constructors work:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/search_query.html">search_query</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_search.html">query_search</a></span><span class="op">(</span></span>
 <span>  query <span class="op">=</span> <span class="st">'biodiversity "annual report"'</span>,</span>
 <span>  filetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pdf"</span>, <span class="st">"docx"</span><span class="op">)</span>,</span>
 <span>  site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"example.com"</span>, <span class="st">"gov"</span><span class="op">)</span>,</span>
@@ -105,15 +121,15 @@
 <span>  intitle <span class="op">=</span> <span class="st">"summary"</span>,</span>
 <span>  expand <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/search_query.html">search_query()</a></code> returns a named list, even for a single input. That consistency makes it easy to scale the same code from one query to many.</p>
+<p><code><a href="../reference/query_search.html">query_search()</a></code> returns a named list, even for a single input. That consistency makes it easy to scale the same code from one query to many.</p>
 <p>If you want to inspect the generated search string interactively:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/open_search_query.html">open_search_query</a></span><span class="op">(</span><span class="va">q</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="execute-and-persist-search-results">Execute and persist search results<a class="anchor" aria-label="anchor" href="#execute-and-persist-search-results"></a>
 </h3>
 <p>Create an output folder and run the request:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-search-"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-search-"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_search</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -131,10 +147,10 @@
 <p>The remaining endpoints use the same connection and request function. Only the query constructor changes.</p>
 <section class="level3"><h4 id="enrich-web">Enrich web<a class="anchor" aria-label="anchor" href="#enrich-web"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_web</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enrich_web_query.html">enrich_web_query</a></span><span class="op">(</span><span class="st">"open data portals"</span>, site <span class="op">=</span> <span class="st">"gov"</span>, expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q_web</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_enrich_web.html">query_enrich_web</a></span><span class="op">(</span><span class="st">"open data portals"</span>, site <span class="op">=</span> <span class="st">"gov"</span>, expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out_web</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-enrich-web-"</span><span class="op">)</span></span>
+<span><span class="va">out_web</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-enrich-web-"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_web</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -145,10 +161,10 @@
 <span><span class="op">)</span></span></code></pre></div>
 </section><section class="level3"><h4 id="enrich-news">Enrich news<a class="anchor" aria-label="anchor" href="#enrich-news"></a>
 </h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_news</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enrich_news_query.html">enrich_news_query</a></span><span class="op">(</span><span class="st">"biodiversity policy"</span>, expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q_news</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_enrich_news.html">query_enrich_news</a></span><span class="op">(</span><span class="st">"biodiversity policy"</span>, expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out_news</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-enrich-news-"</span><span class="op">)</span></span>
+<span><span class="va">out_news</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-enrich-news-"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_news</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -159,8 +175,8 @@
 <span><span class="op">)</span></span></code></pre></div>
 </section><section class="level3"><h4 id="summarize-text-input">Summarize (text input)<a class="anchor" aria-label="anchor" href="#summarize-text-input"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_sum_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q_sum_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Biodiversity underpins ecosystem services including pollination,"</span>,</span>
 <span>    <span class="st">"soil fertility, water purification, and climate regulation."</span>,</span>
@@ -172,7 +188,7 @@
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-summarize-"</span><span class="op">)</span></span>
+<span><span class="va">out_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-summarize-"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_sum</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -183,14 +199,14 @@
 <span><span class="op">)</span></span></code></pre></div>
 </section><section class="level3"><h4 id="fastgpt">FastGPT<a class="anchor" aria-label="anchor" href="#fastgpt"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_fast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fastgpt_query.html">fastgpt_query</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">q_fast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_fastgpt.html">query_fastgpt</a></span><span class="op">(</span></span>
 <span>  query <span class="op">=</span> <span class="st">"What are ecosystem services?"</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  web_search <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out_fast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-fastgpt-"</span><span class="op">)</span></span>
+<span><span class="va">out_fast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-fastgpt-"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_fast</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -202,25 +218,50 @@
 </section></section><section class="level2"><h3 id="convert-json-results-to-parquet">Convert JSON results to parquet<a class="anchor" aria-label="anchor" href="#convert-json-results-to-parquet"></a>
 </h3>
 <p>When you move from inspection to analysis pipelines, parquet is usually more convenient:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">parquet_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"rkagi-parquet-"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">parquet_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"kagiPro-parquet-"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request_parquet.html">kagi_request_parquet</a></span><span class="op">(</span></span>
 <span>  input_json <span class="op">=</span> <span class="va">out_search</span>,</span>
 <span>  output <span class="op">=</span> <span class="va">parquet_dir</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</section><section class="level2"><h3 id="bridge-to-openalex-style-vector-input">Bridge to OpenAlex-style vector input<a class="anchor" aria-label="anchor" href="#bridge-to-openalex-style-vector-input"></a>
+</h3>
+<p>If you want to pass results into <code>openalexPro</code>/<code>openalexVectorComp</code> workflows, use the modular content pipeline: download content -&gt; extract markdown -&gt; summarize markdown.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/download_content.html">download_content</a></span><span class="op">(</span></span>
+<span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span>,</span>
+<span>  endpoint <span class="op">=</span> <span class="st">"search"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/content_markdown.html">content_markdown</a></span><span class="op">(</span></span>
+<span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span>,</span>
+<span>  endpoint <span class="op">=</span> <span class="st">"search"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/markdown_abstract.html">markdown_abstract</a></span><span class="op">(</span></span>
+<span>  project_folder <span class="op">=</span> <span class="st">"kagi_project"</span>,</span>
+<span>  endpoint <span class="op">=</span> <span class="st">"search"</span>,</span>
+<span>  summarizer_fn <span class="op">=</span> <span class="va">summarize_with_openai</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"gpt-4.1-mini"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># abstract parquet output is written under:</span></span>
+<span><span class="co"># kagi_project/search/abstract/query=&lt;query_name&gt;/</span></span></code></pre></div>
+<p><code>id</code> is a deterministic hash of normalized URL.</p>
 </section><section class="level2"><h3 id="where-to-go-next">Where to go next<a class="anchor" aria-label="anchor" href="#where-to-go-next"></a>
 </h3>
 <p>For deeper endpoint-specific workflows (batching patterns, robust error handling, and endpoint-focused examples), continue with:</p>
 <ul>
-<li><code><a href="../articles/search-endpoint.html">vignette("search-endpoint", package = "rkagi")</a></code></li>
-<li><code><a href="../articles/enrich-endpoint.html">vignette("enrich-endpoint", package = "rkagi")</a></code></li>
-<li><code><a href="../articles/summarize-endpoint.html">vignette("summarize-endpoint", package = "rkagi")</a></code></li>
-<li><code><a href="../articles/fastgpt-endpoint.html">vignette("fastgpt-endpoint", package = "rkagi")</a></code></li>
+<li><code><a href="../articles/search-endpoint.html">vignette("search-endpoint", package = "kagiPro")</a></code></li>
+<li><code><a href="../articles/enrich-endpoint.html">vignette("enrich-endpoint", package = "kagiPro")</a></code></li>
+<li><code><a href="../articles/summarize-endpoint.html">vignette("summarize-endpoint", package = "kagiPro")</a></code></li>
+<li><code><a href="../articles/fastgpt-endpoint.html">vignette("fastgpt-endpoint", package = "kagiPro")</a></code></li>
+<li><code><a href="../articles/corpus-workflow.html">vignette("corpus-workflow", package = "kagiPro")</a></code></li>
 </ul></section><section class="level2"><h3 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

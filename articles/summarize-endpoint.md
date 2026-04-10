@@ -1,4 +1,4 @@
-# rkagi Summarize Endpoint Guide
+# kagiPro Summarize Endpoint Guide
 
 ## Summarize Endpoint: Robust Summaries in Real Pipelines
 
@@ -13,7 +13,7 @@ useful output.
 ### Establish a reusable connection
 
 ``` r
-library(rkagi)
+library(kagiPro)
 
 conn <- kagi_connection(
   api_key = function() keyring::key_get("API_kagi")
@@ -22,10 +22,10 @@ conn <- kagi_connection(
 
 ### Build summarize queries for URL and text sources
 
-`rkagi` supports both URL-based and raw-text summarization.
+`kagiPro` supports both URL-based and raw-text summarization.
 
 ``` r
-q_url <- summarize_query(
+q_url <- query_summarize(
   url = "https://www.example.com/long-article",
   engine = "muriel",
   summary_type = "summary",
@@ -35,7 +35,7 @@ q_url <- summarize_query(
 ```
 
 ``` r
-q_text <- summarize_query(
+q_text <- query_summarize(
   text = paste(
     "Biodiversity underpins ecosystem services such as pollination, soil fertility,",
     "water purification, and climate regulation.",
@@ -55,7 +55,7 @@ of input style.
 ### Execute a normal summarize request
 
 ``` r
-out_sum <- "summarize_output"
+out_sum <- "summarize_results"
 dir.create(out_sum, recursive = TRUE, showWarnings = FALSE)
 
 kagi_request(
@@ -75,7 +75,7 @@ document size constraints). If you do not want a full pipeline stop, use
 graceful mode.
 
 ``` r
-q_short <- summarize_query(
+q_short <- query_summarize(
   text = "Too short.",
   engine = "cecil",
   summary_type = "summary",
@@ -100,14 +100,14 @@ summarize fields are present but empty (`data$output = null`,
 A realistic batch often contains both valid and invalid inputs.
 
 ``` r
-q_ok <- summarize_query(
+q_ok <- query_summarize(
   text = paste(rep("Long summarize input text.", 40), collapse = " "),
   engine = "cecil",
   summary_type = "summary",
   target_language = "EN"
 )
 
-q_err <- summarize_query(
+q_err <- query_summarize(
   text = "short",
   engine = "cecil",
   summary_type = "summary",

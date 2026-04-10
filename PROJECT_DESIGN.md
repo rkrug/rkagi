@@ -1,8 +1,8 @@
-# rkagi Design Philosophy and Project Context (for AI Coding Agents)
+# kagiPro Design Philosophy and Project Context (for AI Coding Agents)
 
 ## Purpose
 
-`rkagi` is an R-first client for Kagi APIs designed for reproducible
+`kagiPro` is an R-first client for Kagi APIs designed for reproducible
 data workflows.
 
 The package is optimized for users who want to:
@@ -23,11 +23,13 @@ Code, and similar tools) so changes stay aligned with project intent.
 
 2.  Endpoint-specific constructors, shared execution engine.
     Constructors encode endpoint semantics;
-    [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
+    [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
     executes all supported query objects.
 
 3.  Reproducibility over implicit behavior. Requests write JSON files to
     disk. File-based outputs are treated as source-of-truth artifacts.
+    Query replay metadata is persisted per query (`_query_meta.json`) to
+    support deterministic re-runs.
 
 4.  Predictable scaling from single to batch. Constructors return named
     lists consistently so one-query and many-query workflows use the
@@ -38,21 +40,30 @@ Code, and similar tools) so changes stay aligned with project intent.
     completion is preferred.
 
 6.  Analysis handoff as a first-class workflow.
-    [`kagi_request_parquet()`](https://rkrug.github.io/rkagi/reference/kagi_request_parquet.md)
+    [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md)
     converts JSON collections to parquet for downstream processing.
+
+7.  Modular enrichment pipeline. Content download, markdown extraction,
+    and abstract generation are separate steps
+    ([`download_content()`](https://rkrug.github.io/kagiPro/reference/download_content.md)
+    -\>
+    [`content_markdown()`](https://rkrug.github.io/kagiPro/reference/content_markdown.md)
+    -\>
+    [`markdown_abstract()`](https://rkrug.github.io/kagiPro/reference/markdown_abstract.md)).
 
 ## Public Workflow Contract
 
 Expected user flow:
 
 1.  Create a connection with
-    [`kagi_connection()`](https://rkrug.github.io/rkagi/reference/kagi_connection.md).
+    [`kagi_connection()`](https://rkrug.github.io/kagiPro/reference/kagi_connection.md).
 2.  Build query objects using endpoint-specific constructors.
-3.  Execute with
-    [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
-    into an output directory.
-4.  Optionally convert with
-    [`kagi_request_parquet()`](https://rkrug.github.io/rkagi/reference/kagi_request_parquet.md).
+3.  Preferred: execute with
+    [`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md)
+    into endpoint-scoped project folders.
+4.  Low-level alternative:
+    [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md) +
+    [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md).
 
 This contract should remain stable across releases.
 
@@ -60,22 +71,24 @@ This contract should remain stable across releases.
 
 Current endpoint constructors:
 
-- [`search_query()`](https://rkrug.github.io/rkagi/reference/search_query.md)
-- [`enrich_web_query()`](https://rkrug.github.io/rkagi/reference/enrich_web_query.md)
-- [`enrich_news_query()`](https://rkrug.github.io/rkagi/reference/enrich_news_query.md)
-- [`summarize_query()`](https://rkrug.github.io/rkagi/reference/summarize_query.md)
-- [`fastgpt_query()`](https://rkrug.github.io/rkagi/reference/fastgpt_query.md)
+- [`query_search()`](https://rkrug.github.io/kagiPro/reference/query_search.md)
+- [`query_enrich_web()`](https://rkrug.github.io/kagiPro/reference/query_enrich_web.md)
+- [`query_enrich_news()`](https://rkrug.github.io/kagiPro/reference/query_enrich_news.md)
+- [`query_summarize()`](https://rkrug.github.io/kagiPro/reference/query_summarize.md)
+- [`query_fastgpt()`](https://rkrug.github.io/kagiPro/reference/query_fastgpt.md)
+- [`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md)
+  (high-level orchestrator)
 
 All constructors should:
 
 - Return named lists.
 - Preserve endpoint-specific parameters without hidden coercion.
 - Be accepted directly by
-  [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md).
+  [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md).
 
 ## Error Handling Model
 
-[`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
+[`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
 supports two modes:
 
 - `error_mode = "stop"`: Fail fast and raise an error.
@@ -88,7 +101,7 @@ Dummy payload requirements:
 - Keep endpoint shape as compatible as possible.
 - Use empty/`null` data fields for missing payloads.
 - Remain convertible by
-  [`kagi_request_parquet()`](https://rkrug.github.io/rkagi/reference/kagi_request_parquet.md).
+  [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md).
 
 ## JSON and Parquet Philosophy
 
@@ -101,6 +114,7 @@ Design implications:
 - Prefer non-lossy conversion where possible.
 - Handle partial failures and dummy payloads without breaking
   conversion.
+- Keep query partitions (`query=<name>`) independently refreshable.
 
 ## Testing Philosophy
 
@@ -138,27 +152,79 @@ Agent-oriented operational guidance is packaged in `inst/skills`.
 
 - `maintainer-workflow` covers implementation conventions,
   tests/cassettes, naming, and release hygiene.
+- `maintainer-corpus-pipeline` covers content/markdown/abstract
+  internals and corpus-link contracts.
+- `maintainer-release-sync` covers pre-release consistency checks across
+  code, docs, vignettes, skills, and changelog.
 - Endpoint user skills (`user-search`, `user-enrich`, `user-summarize`,
   `user-fastgpt`) mirror the endpoint vignettes.
+- `user-corpus-workflow` mirrors the end-to-end corpus vignette
+  (`vignettes/corpus-workflow.qmd`).
 
 Skills are intended to be strict execution guidance for coding agents
 and must remain aligned with package behavior and vignette examples.
 
-## Recent Change Summary (toward 0.3.0)
+## Skill Mapping
+
+Preferred skill by workflow phase:
+
+1.  Endpoint query construction and request execution: use
+    `user-search`, `user-enrich`, `user-summarize`, or `user-fastgpt`
+    depending on endpoint.
+2.  End-to-end corpus build (`parquet` -\> `content` -\> `markdown` -\>
+    `abstract`): use `user-corpus-workflow`.
+3.  Internal pipeline changes
+    (download/extraction/summarization/linking): use
+    `maintainer-corpus-pipeline`.
+4.  Cross-cutting package changes (API behavior, tests, docs contracts):
+    use `maintainer-workflow`.
+5.  Pre-release / merge final synchronization: use
+    `maintainer-release-sync`.
+
+## Recent Change Summary (toward 0.4.0)
 
 Key project-level changes reflected in this cycle:
 
 - Standardized query constructor behavior to named lists.
+- Renamed endpoint constructors to `query_<endpoint>`:
+  - [`query_search()`](https://rkrug.github.io/kagiPro/reference/query_search.md)
+  - [`query_enrich_web()`](https://rkrug.github.io/kagiPro/reference/query_enrich_web.md)
+  - [`query_enrich_news()`](https://rkrug.github.io/kagiPro/reference/query_enrich_news.md)
+  - [`query_summarize()`](https://rkrug.github.io/kagiPro/reference/query_summarize.md)
+  - [`query_fastgpt()`](https://rkrug.github.io/kagiPro/reference/query_fastgpt.md)
 - Added/expanded FastGPT endpoint support via
-  [`fastgpt_query()`](https://rkrug.github.io/rkagi/reference/fastgpt_query.md).
+  [`query_fastgpt()`](https://rkrug.github.io/kagiPro/reference/query_fastgpt.md).
 - Added graceful fallback behavior in
-  [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
+  [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
   with dummy outputs.
+- Added query replay metadata files (`_query_meta.json`) written by
+  [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
+  as the single source of truth.
 - Ensured dummy outputs can flow through parquet conversion.
+- Added
+  [`kagi_update_query()`](https://rkrug.github.io/kagiPro/reference/kagi_update_query.md)
+  for query-name scoped reruns and parquet partition refresh.
+- Added
+  [`clean_request()`](https://rkrug.github.io/kagiPro/reference/clean_request.md)
+  to remove JSON request artifacts while preserving per-query metadata
+  for later reruns.
 - Strengthened tests around mixed success/failure request lists.
 - Consolidated cassette location and vcr helper setup.
 - Updated quickstart and added endpoint-focused vignettes.
 - Aligned pkgdown output and article organization.
+- Replaced legacy abstract augmentation with a modular corpus pipeline:
+  [`download_content()`](https://rkrug.github.io/kagiPro/reference/download_content.md)
+  -\>
+  [`content_markdown()`](https://rkrug.github.io/kagiPro/reference/content_markdown.md)
+  -\>
+  [`markdown_abstract()`](https://rkrug.github.io/kagiPro/reference/markdown_abstract.md).
+- Added pluggable content summarizers:
+  [`summarize_with_openai()`](https://rkrug.github.io/kagiPro/reference/summarize_with_openai.md)
+  and
+  [`summarize_with_kagi()`](https://rkrug.github.io/kagiPro/reference/summarize_with_kagi.md).
+- Added
+  [`read_corpus()`](https://rkrug.github.io/kagiPro/reference/read_corpus.md)
+  with optional abstract linking (`abstracts = TRUE`) on `id + query`.
 - Added AI-agent skills under `inst/skills` for maintainer and
   endpoint-specific workflows.
 - Added standard disclaimer and AI-assisted development notice to

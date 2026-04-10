@@ -1,22 +1,54 @@
 # Changelog
 
-## rkagi 0.3.0
+## kagiPro 0.4.0
 
 ### Features
 
+- Added
+  [`kagi_fetch()`](https://rkrug.github.io/kagiPro/reference/kagi_fetch.md)
+  as a high-level project-folder workflow helper with endpoint-scoped
+  outputs (`<project>/<endpoint>/json` and
+  `<project>/<endpoint>/parquet`).
 - Added endpoint-specific query support for FastGPT via
-  [`fastgpt_query()`](https://rkrug.github.io/rkagi/reference/fastgpt_query.md).
+  [`query_fastgpt()`](https://rkrug.github.io/kagiPro/reference/query_fastgpt.md).
+- Added modular corpus enrichment pipeline for search-like corpora:
+  - [`download_content()`](https://rkrug.github.io/kagiPro/reference/download_content.md)
+  - [`content_markdown()`](https://rkrug.github.io/kagiPro/reference/content_markdown.md)
+  - [`markdown_abstract()`](https://rkrug.github.io/kagiPro/reference/markdown_abstract.md)
+    with endpoint/query partitioned output under
+    `<project>/<endpoint>/{content,markdown,abstract}`.
+- Added pluggable text summarization backends:
+  - [`summarize_with_openai()`](https://rkrug.github.io/kagiPro/reference/summarize_with_openai.md)
+  - [`summarize_with_kagi()`](https://rkrug.github.io/kagiPro/reference/summarize_with_kagi.md)
+    (text-based summarizer usage).
+- Added
+  [`read_corpus()`](https://rkrug.github.io/kagiPro/reference/read_corpus.md)
+  with optional abstract linking (`abstracts = TRUE`) by `id + query`.
 - Standardized query constructor outputs to named lists across
   endpoints.
 - Extended
-  [`kagi_request()`](https://rkrug.github.io/rkagi/reference/kagi_request.md)
+  [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
   with `error_mode` (`"stop"`, `"write_dummy"`) for strict vs resilient
   execution modes.
 - Improved handling of mixed query lists so long batch runs can continue
   with structured dummy outputs on failure.
 - Kept JSON-to-parquet as a first-class path via
-  [`kagi_request_parquet()`](https://rkrug.github.io/rkagi/reference/kagi_request_parquet.md)
+  [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md)
   for downstream analytics.
+- Added low-level `00_in.progress` marker lifecycle to request/parquet
+  runs for folder-state visibility during long jobs.
+- Added metadata persistence in
+  [`kagi_request()`](https://rkrug.github.io/kagiPro/reference/kagi_request.md)
+  for replayable query runs:
+  - per-query `_query_meta.json`
+- Added
+  [`kagi_update_query()`](https://rkrug.github.io/kagiPro/reference/kagi_update_query.md)
+  to rerun by `query_name` across matching endpoints and refresh only
+  touched parquet `query=<name>` partitions.
+- Added
+  [`clean_request()`](https://rkrug.github.io/kagiPro/reference/clean_request.md)
+  to remove JSON request artifacts project-wide while preserving
+  `_query_meta.json` per query (with `dry_run` space estimates).
 - Added AI-agent skill scaffolding under `inst/skills`:
   - `maintainer-workflow`
   - `user-search`, `user-enrich`, `user-summarize`, `user-fastgpt`
@@ -36,7 +68,28 @@
 
 ### Breaking Changes
 
-- Query constructors now consistently return named lists. Code that
+- Renamed query constructors to `query_<endpoint>` for discoverability:
+  - `search_query()` -\>
+    [`query_search()`](https://rkrug.github.io/kagiPro/reference/query_search.md)
+  - `enrich_web_query()` -\>
+    [`query_enrich_web()`](https://rkrug.github.io/kagiPro/reference/query_enrich_web.md)
+  - `enrich_news_query()` -\>
+    [`query_enrich_news()`](https://rkrug.github.io/kagiPro/reference/query_enrich_news.md)
+  - `summarize_query()` -\>
+    [`query_summarize()`](https://rkrug.github.io/kagiPro/reference/query_summarize.md)
+  - `fastgpt_query()` -\>
+    [`query_fastgpt()`](https://rkrug.github.io/kagiPro/reference/query_fastgpt.md)
+- Removed `add_sbstract_to_parquet()`. Abstract creation is now handled
+  only via the modular content pipeline
+  ([`download_content()`](https://rkrug.github.io/kagiPro/reference/download_content.md)
+  -\>
+  [`content_markdown()`](https://rkrug.github.io/kagiPro/reference/content_markdown.md)
+  -\>
+  [`markdown_abstract()`](https://rkrug.github.io/kagiPro/reference/markdown_abstract.md)).
+- [`kagi_request_parquet()`](https://rkrug.github.io/kagiPro/reference/kagi_request_parquet.md)
+  is JSON-to-parquet conversion only and no longer accepts
+  abstract-augmentation arguments.
+- Query constructors consistently return named lists. Code that
   previously assumed a bare single query object may require `[[1]]`
   indexing in some direct calls.
 - Error behavior can now be configured explicitly; strict failure

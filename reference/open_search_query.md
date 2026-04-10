@@ -12,7 +12,7 @@ open_search_query(query, session_token = NULL)
 
 - query:
 
-  A full query string (typically from \[search_query()\]).
+  A full query string (typically from \[query_search()\]).
 
 - session_token:
 

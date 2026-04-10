@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>rkagi Summarize Endpoint Guide • rkagi</title>
+<title>kagiPro Summarize Endpoint Guide • kagiPro</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="summarize-endpoint_files/libs/quarto-html/popper.min.js"></script><script src="summarize-endpoint_files/libs/quarto-html/tippy.umd.min.js"></script><link href="summarize-endpoint_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="summarize-endpoint_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="rkagi Summarize Endpoint Guide">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="kagiPro Summarize Endpoint Guide">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,9 +20,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">rkagi</a>
+    <a class="navbar-brand me-2" href="../index.html">kagiPro</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -48,12 +49,12 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>rkagi Summarize Endpoint Guide</h1>
+      <h1>kagiPro Summarize Endpoint Guide</h1>
 
       <p class="author">Rainer Krug</p>
 
 
-
+      <small class="dont-index">Source: <a href="https://github.com/rkrug/kagiPro/blob/main/vignettes/summarize-endpoint.qmd" class="external-link"><code>vignettes/summarize-endpoint.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -69,16 +70,16 @@
 <section class="level2"><h3 id="establish-a-reusable-connection">Establish a reusable connection<a class="anchor" aria-label="anchor" href="#establish-a-reusable-connection"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rkrug.github.io/rkagi/">rkagi</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rkrug/kagiPro" class="external-link">kagiPro</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kagi_connection.html">kagi_connection</a></span><span class="op">(</span></span>
 <span>  api_key <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"API_kagi"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="build-summarize-queries-for-url-and-text-sources">Build summarize queries for URL and text sources<a class="anchor" aria-label="anchor" href="#build-summarize-queries-for-url-and-text-sources"></a>
 </h3>
-<p><code>rkagi</code> supports both URL-based and raw-text summarization.</p>
+<p><code>kagiPro</code> supports both URL-based and raw-text summarization.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  url <span class="op">=</span> <span class="st">"https://www.example.com/long-article"</span>,</span>
 <span>  engine <span class="op">=</span> <span class="st">"muriel"</span>,</span>
 <span>  summary_type <span class="op">=</span> <span class="st">"summary"</span>,</span>
@@ -86,7 +87,7 @@
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Biodiversity underpins ecosystem services such as pollination, soil fertility,"</span>,</span>
 <span>    <span class="st">"water purification, and climate regulation."</span>,</span>
@@ -102,7 +103,7 @@
 </section><section class="level2"><h3 id="execute-a-normal-summarize-request">Execute a normal summarize request<a class="anchor" aria-label="anchor" href="#execute-a-normal-summarize-request"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_sum</span> <span class="op">&lt;-</span> <span class="st">"summarize_output"</span></span>
+<code class="sourceCode R"><span><span class="va">out_sum</span> <span class="op">&lt;-</span> <span class="st">"summarize_results"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">out_sum</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/kagi_request.html">kagi_request</a></span><span class="op">(</span></span>
@@ -116,7 +117,7 @@
 </h3>
 <p>Very short text can trigger server-side failures (for example minimum document size constraints). If you do not want a full pipeline stop, use graceful mode.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="st">"Too short."</span>,</span>
 <span>  engine <span class="op">=</span> <span class="st">"cecil"</span>,</span>
 <span>  summary_type <span class="op">=</span> <span class="st">"summary"</span>,</span>
@@ -135,14 +136,14 @@
 </h3>
 <p>A realistic batch often contains both valid and invalid inputs.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q_ok</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">q_ok</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Long summarize input text."</span>, <span class="fl">40</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>,</span>
 <span>  engine <span class="op">=</span> <span class="st">"cecil"</span>,</span>
 <span>  summary_type <span class="op">=</span> <span class="st">"summary"</span>,</span>
 <span>  target_language <span class="op">=</span> <span class="st">"EN"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">q_err</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_query.html">summarize_query</a></span><span class="op">(</span></span>
+<span><span class="va">q_err</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_summarize.html">query_summarize</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="st">"short"</span>,</span>
 <span>  engine <span class="op">=</span> <span class="st">"cecil"</span>,</span>
 <span>  summary_type <span class="op">=</span> <span class="st">"summary"</span>,</span>

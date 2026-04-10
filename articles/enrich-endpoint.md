@@ -1,15 +1,15 @@
-# rkagi Enrich Endpoint Guide
+# kagiPro Enrich Endpoint Guide
 
 ## Enrich Endpoint: Context Discovery for Web and News
 
 The Enrich API is useful when a plain search result list is not enough
 and you want curated context for a topic.
 
-In `rkagi`, this is split into two constructors:
+In `kagiPro`, this is split into two constructors:
 
-- [`enrich_web_query()`](https://rkrug.github.io/rkagi/reference/enrich_web_query.md)
+- [`query_enrich_web()`](https://rkrug.github.io/kagiPro/reference/query_enrich_web.md)
   for web context.
-- [`enrich_news_query()`](https://rkrug.github.io/rkagi/reference/enrich_news_query.md)
+- [`query_enrich_news()`](https://rkrug.github.io/kagiPro/reference/query_enrich_news.md)
   for news context.
 
 The execution flow is identical for both.
@@ -17,7 +17,7 @@ The execution flow is identical for both.
 ### Create the connection once
 
 ``` r
-library(rkagi)
+library(kagiPro)
 
 conn <- kagi_connection(
   api_key = function() keyring::key_get("API_kagi")
@@ -29,13 +29,13 @@ conn <- kagi_connection(
 Assume you are tracking biodiversity policy from institutional sources.
 
 ``` r
-q_web <- enrich_web_query(
+q_web <- query_enrich_web(
   query = "open data portals",
   site = "gov",
   expand = FALSE
 )
 
-q_news <- enrich_news_query(
+q_news <- query_enrich_news(
   query = "biodiversity policy",
   expand = FALSE
 )
@@ -78,7 +78,7 @@ context and one for news context.
 For recurring monitoring, prepare a topic vector and run it as a batch.
 
 ``` r
-q_news_batch <- enrich_news_query(
+q_news_batch <- query_enrich_news(
   query = c("biodiversity", "ecosystem restoration", "nature finance"),
   expand = TRUE
 )
