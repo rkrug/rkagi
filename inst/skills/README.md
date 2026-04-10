@@ -3,6 +3,19 @@
 This folder contains AI-agent skills for working with `kagiPro`.
 Preferred high-level project workflow: `kagi_fetch()`.
 
+## External Skill Notice
+
+`r-package-developer` is not bundled in this package/repo by default.
+
+If `r-package-developer` is missing, suggest installation to the developer.
+Install only after explicit developer approval. Never install it automatically.
+
+If explicitly approved and `skills/r-package-developer` is missing, install it with:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rkrug/r-package-developer-skill/main/skills/r-package-developer/scripts/sync-from-github.sh)"
+```
+
 ## Skills
 
 - `maintainer-workflow`
@@ -11,7 +24,7 @@ Preferred high-level project workflow: `kagi_fetch()`.
   Use when changing `download_content()`, `content_markdown()`, `markdown_abstract()`, summarizer providers, or abstract-link contracts.
 - `maintainer-release-sync`
   Use before release/merge to synchronize versioning, changelog, docs, vignettes, and skills.
-- `r-package-developer`
+- `r-package-developer` (external path: `skills/r-package-developer`)
   Generic R-package developer baseline skill (portable across repos) for workflow, validation, branch governance, and commit standards.
 - `user-search`
   Use for Search endpoint workflows aligned with `vignettes/search-endpoint.qmd`.
