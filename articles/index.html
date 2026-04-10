@@ -18,9 +18,21 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul><ul class="navbar-nav"><li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-skills" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Skills</button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-skills"><li><a class="dropdown-item" href="../articles/skills-index.html">Skills Index</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-user-search.html">User Search</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-user-enrich.html">User Enrich</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-user-summarize.html">User Summarize</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-user-fastgpt.html">User FastGPT</a></li>
+    <li><a class="dropdown-item" href="../articles/skills-user-corpus-workflow.html">User Corpus Workflow</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../llms.txt">AI Index</a></li>
+<li class="nav-item"><a class="nav-link" href="../llms-full.txt">AI Full</a></li>
       </ul></div>
 
 
@@ -38,6 +50,10 @@
 
       <dl><dt><a href="quickstart.html">kagiPro Quickstart Guide</a></dt>
         <dd>
+        </dd><dt><a href="agent-quick-index.html">Agent Quick Index</a></dt>
+        <dd>
+        </dd><dt><a href="api-contracts.html">API Contracts</a></dt>
+        <dd>
         </dd><dt><a href="corpus-workflow.html">kagiPro Corpus Workflow: Search to Abstract-Linked Corpus</a></dt>
         <dd>
         </dd><dt><a href="search-endpoint.html">kagiPro Search Endpoint Guide</a></dt>
@@ -49,7 +65,33 @@
         </dd><dt><a href="fastgpt-endpoint.html">kagiPro FastGPT Endpoint Guide</a></dt>
         <dd>
       </dd></dl></div>
-  </main></div>
+    <div class="section ">
+      <h3>Skills</h3>
+      <div class="section-desc"></div>
+
+      <dl><dt><a href="skills-index.html">Skills Index</a></dt>
+        <dd>
+        </dd><dt><a href="skills-maintainer-workflow.html">Skill: Maintainer Workflow</a></dt>
+        <dd><p>Use this skill when changing kagiPro internals, tests, docs, release metadata, or endpoint behavior. Covers design principles, naming principles, testing with vcr, and release hygiene.</p>
+        </dd><dt><a href="skills-maintainer-release-sync.html">Skill: Maintainer Release Sync</a></dt>
+        <dd><p>Use this skill before release/PR merge to synchronize versioning, changelog, design docs, vignettes, README, and skills with implemented behavior.</p>
+        </dd><dt><a href="skills-maintainer-corpus-pipeline.html">Skill: Maintainer Corpus Pipeline</a></dt>
+        <dd><p>Use this skill when changing content download, markdown extraction, abstract generation, summarizer providers, or corpus-read linking behavior.</p>
+        </dd><dt><a href="skills-r-package-maintainer.html">Skill: R Package Maintainer</a></dt>
+        <dd><p>Generic R package maintainer skill for implementation quality, testing, docs sync, release hygiene, branch governance, and merge safety.</p>
+        </dd><dt><a href="skills-user-search.html">Skill: User Search</a></dt>
+        <dd><p>Use this skill for kagiPro Search endpoint workflows, including query construction, batch execution, error_mode selection, and parquet conversion.</p>
+        </dd><dt><a href="skills-user-enrich.html">Skill: User Enrich</a></dt>
+        <dd><p>Use this skill for kagiPro Enrich endpoint workflows across web and news, including batch execution, error handling, and parquet conversion.</p>
+        </dd><dt><a href="skills-user-summarize.html">Skill: User Summarize</a></dt>
+        <dd><p>Use this skill for kagiPro Summarize endpoint workflows, including URL/text query modes, graceful handling of short-input failures, and parquet conversion.</p>
+        </dd><dt><a href="skills-user-fastgpt.html">Skill: User Fastgpt</a></dt>
+        <dd><p>Use this skill for kagiPro FastGPT endpoint workflows, including prompt query sets, batch execution, error-mode strategy, and parquet conversion.</p>
+        </dd><dt><a href="skills-user-corpus-workflow.html">Skill: User Corpus Workflow</a></dt>
+        <dd><p>Use this skill for the end-to-end corpus pipeline in kagiPro: search results to parquet, content download, markdown extraction, abstract generation, and corpus reading with optional abstract linking.</p>
+      </dd></dl></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

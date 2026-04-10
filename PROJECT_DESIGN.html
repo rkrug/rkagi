@@ -18,9 +18,21 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul><ul class="navbar-nav"><li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-skills" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Skills</button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-skills"><li><a class="dropdown-item" href="articles/skills-index.html">Skills Index</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
+    <li><a class="dropdown-item" href="articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-search.html">User Search</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-enrich.html">User Enrich</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-summarize.html">User Summarize</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-fastgpt.html">User FastGPT</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-corpus-workflow.html">User Corpus Workflow</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="llms.txt">AI Index</a></li>
+<li class="nav-item"><a class="nav-link" href="llms-full.txt">AI Full</a></li>
       </ul></div>
 
 
@@ -132,6 +144,8 @@
 <code>maintainer-corpus-pipeline</code> covers content/markdown/abstract internals and corpus-link contracts.</li>
 <li>
 <code>maintainer-release-sync</code> covers pre-release consistency checks across code, docs, vignettes, skills, and changelog.</li>
+<li>
+<code>r-package-maintainer</code> provides a generic, reusable R-package governance baseline (workflow, branch policy, validation, commit standard, and skill design rules).</li>
 <li>Endpoint user skills (<code>user-search</code>, <code>user-enrich</code>, <code>user-summarize</code>, <code>user-fastgpt</code>) mirror the endpoint vignettes.</li>
 <li>
 <code>user-corpus-workflow</code> mirrors the end-to-end corpus vignette (<code>vignettes/corpus-workflow.qmd</code>).</li>
@@ -144,8 +158,18 @@
 <li>End-to-end corpus build (<code>parquet</code> -&gt; <code>content</code> -&gt; <code>markdown</code> -&gt; <code>abstract</code>): use <code>user-corpus-workflow</code>.</li>
 <li>Internal pipeline changes (download/extraction/summarization/linking): use <code>maintainer-corpus-pipeline</code>.</li>
 <li>Cross-cutting package changes (API behavior, tests, docs contracts): use <code>maintainer-workflow</code>.</li>
+<li>Generic package-maintenance governance workflows (portable pattern): use <code>r-package-maintainer</code>.</li>
 <li>Pre-release / merge final synchronization: use <code>maintainer-release-sync</code>.</li>
 </ol></div>
+<div class="section level2">
+<h2 id="skills-in-pkgdown">Skills in pkgdown<a class="anchor" aria-label="anchor" href="#skills-in-pkgdown"></a></h2>
+<p>Skills are rendered in pkgdown via include-based wrapper vignettes (<code>vignettes/skills-*.qmd</code>) so skill text remains single-source in <code>inst/skills</code>.</p>
+<p>Contract:</p>
+<ul><li>one wrapper page per skill,</li>
+<li>references embedded within the same skill page,</li>
+<li>compact Skills menu (one entry per skill),</li>
+<li>no duplicated copied skill/reference text in vignettes.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="recent-change-summary-toward-040">Recent Change Summary (toward 0.4.0)<a class="anchor" aria-label="anchor" href="#recent-change-summary-toward-040"></a></h2>
 <p>Key project-level changes reflected in this cycle:</p>

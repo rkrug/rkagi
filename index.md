@@ -95,10 +95,14 @@ Endpoint guides are available at: -
 <https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html> -
 <https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html> -
 <https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html> -
-<https://rkrug.github.io/kagiPro/articles/corpus-workflow.html>
+<https://rkrug.github.io/kagiPro/articles/corpus-workflow.html> -
+<https://rkrug.github.io/kagiPro/articles/agent-quick-index.html> -
+<https://rkrug.github.io/kagiPro/articles/api-contracts.html>
 
 AI-agent skills (for Codex/Claude-style workflows) are packaged under: -
-`inst/skills/` - `inst/skills/README.md` (index and selection rules)
+`inst/skills/` - `inst/skills/README.md` (index and selection rules) -
+machine-readable AI indexes: - `llms.txt` (compact) - `llms-full.txt`
+(extended contracts/workflows)
 
 The full reference and function documentation is published via
 **pkgdown** at:  

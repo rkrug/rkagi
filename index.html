@@ -36,10 +36,23 @@
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
-</form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rkrug/kagiPro/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-skills" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Skills</button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-skills">
+<li><a class="dropdown-item" href="articles/skills-index.html">Skills Index</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-workflow.html">Maintainer Workflow</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-release-sync.html">Maintainer Release Sync</a></li>
+    <li><a class="dropdown-item" href="articles/skills-maintainer-corpus-pipeline.html">Maintainer Corpus Pipeline</a></li>
+    <li><a class="dropdown-item" href="articles/skills-r-package-maintainer.html">R Package Maintainer</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-search.html">User Search</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-enrich.html">User Enrich</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-summarize.html">User Summarize</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-fastgpt.html">User FastGPT</a></li>
+    <li><a class="dropdown-item" href="articles/skills-user-corpus-workflow.html">User Corpus Workflow</a></li>
+  </ul>
+</li>
+<li class="nav-item"><a class="nav-link" href="llms.txt">AI Index</a></li>
+<li class="nav-item"><a class="nav-link" href="llms-full.txt">AI Full</a></li>
       </ul>
 </div>
 
@@ -139,8 +152,8 @@ Store your API key securely in your system keychain:</p>
 </h2>
 <p>A detailed <strong>Quickstart vignette</strong> is included and available at:<br>
 👉 <a href="https://rkrug.github.io/kagiPro/articles/quickstart.html" class="uri">https://rkrug.github.io/kagiPro/articles/quickstart.html</a></p>
-<p>Endpoint guides are available at: - <a href="https://rkrug.github.io/kagiPro/articles/search-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/search-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/corpus-workflow.html" class="uri">https://rkrug.github.io/kagiPro/articles/corpus-workflow.html</a></p>
-<p>AI-agent skills (for Codex/Claude-style workflows) are packaged under: - <code>inst/skills/</code> - <code>inst/skills/README.md</code> (index and selection rules)</p>
+<p>Endpoint guides are available at: - <a href="https://rkrug.github.io/kagiPro/articles/search-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/search-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/enrich-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/summarize-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html" class="uri">https://rkrug.github.io/kagiPro/articles/fastgpt-endpoint.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/corpus-workflow.html" class="uri">https://rkrug.github.io/kagiPro/articles/corpus-workflow.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/agent-quick-index.html" class="uri">https://rkrug.github.io/kagiPro/articles/agent-quick-index.html</a> - <a href="https://rkrug.github.io/kagiPro/articles/api-contracts.html" class="uri">https://rkrug.github.io/kagiPro/articles/api-contracts.html</a></p>
+<p>AI-agent skills (for Codex/Claude-style workflows) are packaged under: - <code>inst/skills/</code> - <code>inst/skills/README.md</code> (index and selection rules) - machine-readable AI indexes: - <code>llms.txt</code> (compact) - <code>llms-full.txt</code> (extended contracts/workflows)</p>
 <p>The full reference and function documentation is published via <strong>pkgdown</strong> at:<br>
 👉 <a href="https://rkrug.github.io/kagiPro/" class="uri">https://rkrug.github.io/kagiPro/</a></p>
 <hr>
