@@ -51,16 +51,6 @@ endpoint_path_from_query_class <- function(query_class) {
   )
 }
 
-#' Which API version does a query class belong to
-#' @noRd
-#' @keywords internal
-api_version_for_query_class <- function(query_class) {
-  if (query_class %in% kagi_query_classes()) {
-    return("v1")
-  }
-  stop("Unknown Query Class: ", query_class, call. = FALSE)
-}
-
 #' All supported query classes
 #' @noRd
 #' @keywords internal

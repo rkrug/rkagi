@@ -16,11 +16,11 @@ output, parquet conversion, and optional corpus enrichment.
 - `kagi_query_extract(pages, ...)` — URL → markdown
 
 ### Execution
-- `kagi_request(connection, query, pages = 1, ...)` low-level request executor
-- `kagi_fetch(connection, query, project_folder, ...)` high-level orchestrator
+- `kagi_request(connection, query, pages = 1, error_mode = c("stop", "write_dummy"), ...)` low-level request executor; `pages` drives body-paginated search (1–10)
+- `kagi_fetch(connection, query, project_folder, pages = 1, combine = TRUE, ...)` high-level orchestrator
 
 ### Conversion/storage
-- `kagi_request_parquet(input_json, output, ...)` JSON->parquet conversion
+- `kagi_request_parquet(input_json, output, combine = FALSE, ...)` JSON->parquet conversion; `combine = TRUE` collapses Hive partitions into a single `<output>/combined.parquet`
 - `clean_request(project_folder, ...)` remove JSON payloads while preserving metadata
 - `kagi_update_query(connection, project_folder, query_name, ...)` rerun query by name and refresh touched partitions
 

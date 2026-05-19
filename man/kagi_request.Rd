@@ -24,9 +24,12 @@ kagi_request(
 \item{query}{A query object of class \code{kagi_query_search},
 \code{kagi_query_extract}, or a list of such objects.}
 
-\item{limit}{Optional integer limit used for search and enrich endpoints.}
+\item{limit}{Optional integer limit used for search requests.}
 
-\item{pages}{Integer between 1 and 10. Number of pages to be downloaded.}
+\item{pages}{Integer between 1 and 10. Number of pages to be downloaded
+per query. The Kagi \verb{/search} endpoint is body-paginated; each iteration
+sets \code{body$page} to the page index and writes a separate
+\verb{search_<page>.json} file. Ignored for \code{kagi_query_extract} (one shot).}
 
 \item{output}{Directory where JSON response files are written.}
 
@@ -59,7 +62,9 @@ If \code{query} is a list of query objects, requests are executed in parallel
 \code{output}.
 
 Files are written as \verb{\{endpoint\}_\{page\}.json} (for example \code{search_1.json}).
-Pagination is handled via \code{meta$next_cursor} when provided by the API.
+Pagination for \verb{/search} is body-driven: the caller controls how many pages
+to fetch via the \code{pages} argument (1–10), and each iteration sets the
+\code{page} field of the request body.
 
 Query replay metadata is written alongside JSON outputs:
 \itemize{

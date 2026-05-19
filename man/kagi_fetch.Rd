@@ -35,7 +35,7 @@ temporary directory is used.}
 
 \item{workers}{Number of workers for list requests.}
 
-\item{limit}{Optional integer limit used for search/enrich request calls.}
+\item{limit}{Optional integer limit used for search requests.}
 
 \item{pages}{Integer between 1 and 10. Number of pages to be downloaded.}
 

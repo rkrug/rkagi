@@ -15,9 +15,6 @@
 #' @param summarizer_fn Function with signature
 #'   `fn(text, model, ...) -> character(1) | NA_character_`.
 #' @param model Provider-specific model/engine.
-#' @param connection Optional [kagi_connection()] object. Currently unused
-#'   but retained for forward compatibility with future Kagi-side
-#'   summarization endpoints.
 #' @param provider_args Optional named list forwarded to `summarizer_fn`.
 #' @param markdown_root Root folder name containing markdown files.
 #' @param abstract_root Root folder name for abstract parquet outputs.
@@ -34,7 +31,6 @@ markdown_abstract <- function(
   verbose = FALSE,
   summarizer_fn = summarize_with_openai,
   model = "gpt-4.1-mini",
-  connection = NULL,
   provider_args = list(),
   markdown_root = "markdown",
   abstract_root = "abstract"
@@ -55,9 +51,6 @@ markdown_abstract <- function(
   }
   if (!is.function(summarizer_fn)) {
     stop("`summarizer_fn` must be a function.", call. = FALSE)
-  }
-  if (!is.null(connection) && !inherits(connection, "kagi_connection")) {
-    stop("`connection` must be NULL or of class `kagi_connection`.", call. = FALSE)
   }
   workers <- as.integer(workers)
 

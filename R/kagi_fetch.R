@@ -17,7 +17,7 @@
 #'   `"extract"`.
 #' @param overwrite Logical. If `TRUE`, endpoint output folders are overwritten.
 #' @param workers Number of workers for list requests.
-#' @param limit Optional integer limit used for search/enrich request calls.
+#' @param limit Optional integer limit used for search requests.
 #' @param pages Integer between 1 and 10. Number of pages to be downloaded.
 #' @param verbose Logical indicating whether progress messages should be shown.
 #' @param error_mode Error handling mode passed to [kagi_request()].

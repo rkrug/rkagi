@@ -13,7 +13,6 @@ markdown_abstract(
   verbose = FALSE,
   summarizer_fn = summarize_with_openai,
   model = "gpt-4.1-mini",
-  connection = NULL,
   provider_args = list(),
   markdown_root = "markdown",
   abstract_root = "abstract"
@@ -38,10 +37,6 @@ are considered.}
 `fn(text, model, ...) -> character(1) | NA_character_`.}
 
 \item{model}{Provider-specific model/engine.}
-
-\item{connection}{Optional [kagi_connection()] object. Currently unused
-but retained for forward compatibility with future Kagi-side
-summarization endpoints.}
 
 \item{provider_args}{Optional named list forwarded to `summarizer_fn`.}
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-`kagiPro` — an R package (R >= 4.2) client for the Kagi APIs (Search, Enrich, Summarizer, FastGPT, plus v1 Preview). Built around a query-first architecture where users construct typed query objects with `query_*()` constructors and execute them through a shared engine.
+`kagiPro` — an R package (R >= 4.2) client for the Kagi API (`v1`). Built around a query-first architecture where users construct typed query objects with `kagi_query_*()` constructors and execute them through a shared engine. The legacy `v0` beta API was retired in 0.5.0.
 
 ## Commands
 
@@ -31,27 +31,27 @@ This verifies `llms.txt` ↔ `pkgdown/extra/llms.txt`, `llms-full.txt` ↔ `pkgd
 
 The package separates **query construction** from **execution**. Understanding this split is the entry point to everything else.
 
-1. **Connection** — `kagi_connection(api_version = "v0" | "v1")` builds an S3 list carrying base URL, auth header scheme (`Bot` for v0, `Bearer` for v1), and the API version. The connection's `api_version` is checked against the query's class at request time; mismatches abort with a directive to construct the right connection.
+1. **Connection** — `kagi_connection(api_version = "v1")` builds an S3 list carrying base URL, auth header (`Bearer <key>`), and the API version. The `api_version` arg is kept only as a forward-compat hook; `"v1"` is the only accepted value today. The retry policy retries on `408/429/500/502/503/504` with a capped exponential backoff (max 10s per attempt).
 
 2. **Query constructors** return named lists of S3-classed query objects, one element per query (so single and batch flows share the same call shape):
-   - v0: `query_search`, `query_enrich_web`, `query_enrich_news`, `query_summarize`, `query_fastgpt`
-   - v1: `query_search_v1`, `query_extract`
-   - Class → endpoint / API-version mapping is centralised in [R/utils.R](R/utils.R) (`endpoint_for_query_class`, `api_version_for_query_class`, `kagi_update_query` helpers). When adding an endpoint, update these dispatch tables.
+   - `kagi_query_search()` — class `kagi_query_search`, subclasses `list`. Workflows: `search`, `images`, `videos`, `news`, `podcasts`. Optional `lens`, `filters`, `extract`, `personalizations`, `safe_search`, `page`, `limit`, etc.
+   - `kagi_query_extract()` — class `kagi_query_extract`. Auto-chunks URL vectors into batches of up to 10 (`/extract` API per-request maximum).
+   - Class → endpoint mapping lives in [R/utils.R](R/utils.R) (`endpoint_from_query_class`, `endpoint_path_from_query_class`, `kagi_query_classes`, `serialize_query_payload`, `reconstruct_query_from_meta`). When adding an endpoint, update these dispatch tables.
 
 3. **Execution** — two layers:
-   - High-level: `kagi_fetch()` ([R/kagi_fetch.R](R/kagi_fetch.R)) is the preferred entrypoint. It writes endpoint-scoped folders `<project_folder>/<endpoint>/json` and `<project_folder>/<endpoint>/parquet`, then (for `kagi_query_search_v1`) optionally materialises a corpus via `as_corpus_parquet()`.
-   - Low-level: `kagi_request()` ([R/kagi_request.R](R/kagi_request.R)) dispatches on query class via a `switch()` and writes raw JSON + a `_query_meta.json` replay record per query. `kagi_request_parquet()` converts JSON pages to Hive-partitioned parquet (`query=<name>`). v0 and v1 search responses both land in `search_<page>.json`, so parquet dispatch in [R/kagi_request_parquet.R](R/kagi_request_parquet.R) keys on the persisted query class, not the filename.
+   - High-level: `kagi_fetch()` ([R/kagi_fetch.R](R/kagi_fetch.R)) is the preferred entrypoint. It writes endpoint-scoped folders `<project_folder>/<endpoint>/json` and `<project_folder>/<endpoint>/parquet`, then (for `kagi_query_search`) optionally materialises a corpus via `as_corpus_parquet()`. Endpoints today are `search` and `extract`.
+   - Low-level: `kagi_request()` ([R/kagi_request.R](R/kagi_request.R)) dispatches on query class via a `switch()`, writes raw JSON, and persists a `_query_meta.json` replay record per query. The `pages` argument (1–10) drives body-paginated fetches — each iteration sets `body$page` and writes a separate `search_<page>.json`. `kagi_request_parquet()` converts JSON pages to Hive-partitioned parquet (`query=<name>/type=<type>` for search; `query=<name>` for extract). With `combine = TRUE` (default for `kagi_fetch()`) the partitions are union-merged into a single `combined.parquet` and the partition dirs are removed. Parquet dispatch keys on the persisted query class in `_query_meta.json`.
 
-4. **Error model** — `kagi_request()` supports `error_mode = "stop"` and `error_mode = "write_dummy"`. Dummy payloads must keep endpoint shape and flow through parquet conversion intact. Both paths must remain tested.
+4. **Error model** — `kagi_request()` supports `error_mode = "stop"` and `error_mode = "write_dummy"`. Errors are unpacked from the httr2 condition (`e$resp`) so the full envelope (HTTP status + Kagi `error[].code` / `error[].msg` + raw body) reaches the message and the dummy payload. Dummy payloads keep endpoint shape and flow through parquet conversion intact. Both paths must remain tested.
 
 5. **Corpus pipeline** — independent, sequential stages (each idempotent per query partition):
-   `download_content()` → `content_markdown()` → `markdown_abstract()` → `read_corpus(..., abstracts = TRUE)`. Abstract linking key is `id + query`; the abstract column is lowercase `abstract`. Pluggable summarizers: `summarize_with_openai()`, `summarize_with_kagi()`.
+   `download_content()` → `content_markdown()` → `markdown_abstract()` → `read_corpus(..., abstracts = TRUE)`. Abstract linking key is `id + query`; the abstract column is lowercase `abstract`. Summarizer plug: `summarize_with_openai()`.
 
 6. **Replay / refresh** — every request writes `_query_meta.json`. `kagi_update_query(query_name = ...)` reruns a single stored query and refreshes only its parquet partition. `clean_request()` deletes raw JSON while preserving replay metadata.
 
 ## Testing
 
-Tests are cassette-driven with **vcr**. Cassettes live in `tests/testthat/fixtures/cassettes`. Setup/teardown is in `tests/testthat/setup-vcr.R` and `teardown-vcr.R`; `helper_kagi.R` resolves the API key from `keyring::key_get("API_kagi")` or `KAGI_API_KEY` env var. When a cassette is present, tests replay with a placeholder key; recording new cassettes needs a real key. Required coverage when adding/changing endpoints: success path, failure / dummy-write path, parquet conversion on mixed outputs.
+Tests live in [tests/testthat/test-v1.R](tests/testthat/test-v1.R) and exercise pure R behaviour (constructor validation, query bodies, class assertions, OpenAPI spec presence). They do not hit the network. The `vcr` plumbing (`setup-vcr.R`, `teardown-vcr.R`, `helper_kagi.R`) is retained for future cassette-backed tests — `helper_kagi.R` resolves the API key from `keyring::key_get("API_kagi")` or `KAGI_API_KEY`. When adding network-touching tests for a new endpoint: success path, failure / dummy-write path, parquet conversion on mixed outputs.
 
 ## Conventions specific to this repo
 
@@ -61,7 +61,7 @@ Tests are cassette-driven with **vcr**. Cassettes live in `tests/testthat/fixtur
 - `llms.txt` / `llms-full.txt` at the repo root and their mirrors under `pkgdown/extra/` must stay byte-identical (the AI-docs check enforces `cmp -s`).
 - Keep `inst/skills/` (bundled agent skills) and the corresponding `vignettes/skills-*.qmd` wrappers in sync. The wrappers are include-based — skill text is single-source in `inst/skills/`.
 - The generic `skills/r-package-developer/` skill is maintained externally and is `.Rbuildignore`d; do not auto-install it without explicit user approval.
-- v0 query objects subclass `character`; v1 query objects subclass `list`. Preserve this when adding constructors so existing class checks (`identical(query_class, "kagi_query_search_v1")`, etc.) stay correct.
+- Query objects subclass `list`. Class name matches the constructor function name (`kagi_query_search`, `kagi_query_extract`). Preserve this when adding constructors so existing class checks (`identical(query_class, "kagi_query_search")`, etc.) stay correct.
 
 ## Reference material
 

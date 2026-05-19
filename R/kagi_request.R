@@ -10,8 +10,11 @@
 #' @param connection A [kagi_connection()] object.
 #' @param query A query object of class `kagi_query_search`,
 #'   `kagi_query_extract`, or a list of such objects.
-#' @param limit Optional integer limit used for search and enrich endpoints.
-#' @param pages Integer between 1 and 10. Number of pages to be downloaded.
+#' @param limit Optional integer limit used for search requests.
+#' @param pages Integer between 1 and 10. Number of pages to be downloaded
+#'   per query. The Kagi `/search` endpoint is body-paginated; each iteration
+#'   sets `body$page` to the page index and writes a separate
+#'   `search_<page>.json` file. Ignored for `kagi_query_extract` (one shot).
 #' @param output Directory where JSON response files are written.
 #' @param overwrite Logical. If `TRUE`, existing `output` is deleted before
 #'   writing.
@@ -28,15 +31,16 @@
 #'
 #' @details
 #' Files are written as `{endpoint}_{page}.json` (for example `search_1.json`).
-#' Pagination is handled via `meta$next_cursor` when provided by the API.
+#' Pagination for `/search` is body-driven: the caller controls how many pages
+#' to fetch via the `pages` argument (1–10), and each iteration sets the
+#' `page` field of the request body.
 #'
 #' Query replay metadata is written alongside JSON outputs:
 #' - per query folder: `_query_meta.json`
 #'
 #' @md
 #'
-#' @importFrom utils tail
-#' @importFrom httr2 req_url_query req_perform resp_body_json resp_body_string
+#' @importFrom httr2 req_perform resp_body_json resp_body_string
 #' @importFrom utils packageVersion
 #' @importFrom future plan multisession sequential
 #' @importFrom future.apply future_lapply
